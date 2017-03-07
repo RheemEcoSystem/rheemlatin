@@ -1,0 +1,4 @@
+{
+  "org.qcri.rheem.newplan.logical.relational.LOLoad" = "org.qri.rheem.basic.operators.TextFileSource",
+  "org.qcri.rheem.newplan.logical.relational.LOSort" = "org.qri.rheem.basic.operators.SortOperator",
+}
