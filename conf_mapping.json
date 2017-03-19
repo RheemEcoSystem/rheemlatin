@@ -1,4 +1,6 @@
 {
-  "org.qcri.rheem.newplan.logical.relational.LOLoad" = "org.qri.rheem.basic.operators.TextFileSource",
-  "org.qcri.rheem.newplan.logical.relational.LOSort" = "org.qri.rheem.basic.operators.SortOperator",
+  "org.qcri.rheem.latin.plan.operator.relational.lo.LOLoad"   : "org.qcri.rheem.basic.operators.TextFileSource",
+  "org.qcri.rheem.latin.plan.operator.relational.lo.LOSort"   : "org.qcri.rheem.basic.operators.SortOperator",
+  "org.qcri.rheem.latin.plan.operator.relational.lo.LOStore"  : "org.qcri.rheem.basic.operators.LocalCallbackSink",
+  "org.qcri.rheem.latin.plan.operator.relational.lo.LOFilter" : "org.qcri.rheem.basic.operators.FilterOperator",
 }
