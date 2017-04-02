@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g 2017-03-21 19:37:25
+// $ANTLR 3.5.2 src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g 2017-04-02 10:19:47
 
 package org.qcri.rheem.latin.expression;
 
@@ -15,30 +15,31 @@ public class Valid2Lexer extends Lexer {
 	public static final int DOT=8;
 	public static final int EQUAL=9;
 	public static final int FALSE_LITERAL=10;
-	public static final int GR=11;
-	public static final int GR_EQUAL=12;
-	public static final int IDENT=13;
-	public static final int LE=14;
-	public static final int LEFT_BRACE=15;
-	public static final int LEFT_BRACKET=16;
-	public static final int LEFT_PAREN=17;
-	public static final int LETTER=18;
-	public static final int LE_EQUAL=19;
-	public static final int MOD=20;
-	public static final int NOT_EQUAL=21;
-	public static final int NUMBER=22;
-	public static final int OR_RW=23;
-	public static final int PLUS=24;
-	public static final int RIGHT_BRACE=25;
-	public static final int RIGHT_BRACKET=26;
-	public static final int RIGHT_PAREN=27;
-	public static final int SEMICOLON=28;
-	public static final int SLASH=29;
-	public static final int STAR=30;
-	public static final int SUB=31;
-	public static final int TRUE_LITERAL=32;
-	public static final int UNDERSCORE=33;
-	public static final int WS=34;
+	public static final int FUNCTION=11;
+	public static final int GR=12;
+	public static final int GR_EQUAL=13;
+	public static final int IDENT=14;
+	public static final int LE=15;
+	public static final int LEFT_BRACE=16;
+	public static final int LEFT_BRACKET=17;
+	public static final int LEFT_PAREN=18;
+	public static final int LETTER=19;
+	public static final int LE_EQUAL=20;
+	public static final int MOD=21;
+	public static final int NOT_EQUAL=22;
+	public static final int NUMBER=23;
+	public static final int OR_RW=24;
+	public static final int PLUS=25;
+	public static final int RIGHT_BRACE=26;
+	public static final int RIGHT_BRACKET=27;
+	public static final int RIGHT_PAREN=28;
+	public static final int SEMICOLON=29;
+	public static final int SLASH=30;
+	public static final int STAR=31;
+	public static final int SUB=32;
+	public static final int TRUE_LITERAL=33;
+	public static final int UNDERSCORE=34;
+	public static final int WS=35;
 
 	// delegates
 	// delegators
@@ -851,19 +852,80 @@ public class Valid2Lexer extends Lexer {
 	}
 	// $ANTLR end "WS"
 
+	// $ANTLR start "FUNCTION"
+	public final void mFUNCTION() throws RecognitionException {
+		try {
+			int _type = FUNCTION;
+			int _channel = DEFAULT_TOKEN_CHANNEL;
+			// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:104:10: ( ( '@' ( 'A' .. 'Z' )+ ) )
+			// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:104:12: ( '@' ( 'A' .. 'Z' )+ )
+			{
+			// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:104:12: ( '@' ( 'A' .. 'Z' )+ )
+			// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:104:13: '@' ( 'A' .. 'Z' )+
+			{
+			match('@'); if (state.failed) return;
+			// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:104:17: ( 'A' .. 'Z' )+
+			int cnt6=0;
+			loop6:
+			while (true) {
+				int alt6=2;
+				int LA6_0 = input.LA(1);
+				if ( ((LA6_0 >= 'A' && LA6_0 <= 'Z')) ) {
+					alt6=1;
+				}
+
+				switch (alt6) {
+				case 1 :
+					// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:
+					{
+					if ( (input.LA(1) >= 'A' && input.LA(1) <= 'Z') ) {
+						input.consume();
+						state.failed=false;
+					}
+					else {
+						if (state.backtracking>0) {state.failed=true; return;}
+						MismatchedSetException mse = new MismatchedSetException(null,input);
+						recover(mse);
+						throw mse;
+					}
+					}
+					break;
+
+				default :
+					if ( cnt6 >= 1 ) break loop6;
+					if (state.backtracking>0) {state.failed=true; return;}
+					EarlyExitException eee = new EarlyExitException(6, input);
+					throw eee;
+				}
+				cnt6++;
+			}
+
+			}
+
+			}
+
+			state.type = _type;
+			state.channel = _channel;
+		}
+		finally {
+			// do for sure before leaving
+		}
+	}
+	// $ANTLR end "FUNCTION"
+
 	@Override
 	public void mTokens() throws RecognitionException {
-		// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:1:8: ( TRUE_LITERAL | FALSE_LITERAL | IDENT | SEMICOLON | COMMA | DOT | COLON | LEFT_PAREN | RIGHT_PAREN | LEFT_BRACE | RIGHT_BRACE | LEFT_BRACKET | RIGHT_BRACKET | PLUS | SUB | STAR | SLASH | MOD | EQUAL | NOT_EQUAL | GR_EQUAL | LE_EQUAL | GR | LE | OR_RW | AND_RW | NUMBER | WS )
-		int alt6=28;
+		// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:1:8: ( TRUE_LITERAL | FALSE_LITERAL | IDENT | SEMICOLON | COMMA | DOT | COLON | LEFT_PAREN | RIGHT_PAREN | LEFT_BRACE | RIGHT_BRACE | LEFT_BRACKET | RIGHT_BRACKET | PLUS | SUB | STAR | SLASH | MOD | EQUAL | NOT_EQUAL | GR_EQUAL | LE_EQUAL | GR | LE | OR_RW | AND_RW | NUMBER | WS | FUNCTION )
+		int alt7=29;
 		switch ( input.LA(1) ) {
 		case 'T':
 			{
-			alt6=1;
+			alt7=1;
 			}
 			break;
 		case 'F':
 			{
-			alt6=2;
+			alt7=2;
 			}
 			break;
 		case 'a':
@@ -893,128 +955,128 @@ public class Valid2Lexer extends Lexer {
 		case 'y':
 		case 'z':
 			{
-			alt6=3;
+			alt7=3;
 			}
 			break;
 		case ';':
 			{
-			alt6=4;
+			alt7=4;
 			}
 			break;
 		case ',':
 			{
-			alt6=5;
+			alt7=5;
 			}
 			break;
 		case '.':
 			{
-			alt6=6;
+			alt7=6;
 			}
 			break;
 		case ':':
 			{
-			alt6=7;
+			alt7=7;
 			}
 			break;
 		case '(':
 			{
-			alt6=8;
+			alt7=8;
 			}
 			break;
 		case ')':
 			{
-			alt6=9;
+			alt7=9;
 			}
 			break;
 		case '{':
 			{
-			alt6=10;
+			alt7=10;
 			}
 			break;
 		case '}':
 			{
-			alt6=11;
+			alt7=11;
 			}
 			break;
 		case '[':
 			{
-			alt6=12;
+			alt7=12;
 			}
 			break;
 		case ']':
 			{
-			alt6=13;
+			alt7=13;
 			}
 			break;
 		case '+':
 			{
-			alt6=14;
+			alt7=14;
 			}
 			break;
 		case '-':
 			{
-			alt6=15;
+			alt7=15;
 			}
 			break;
 		case '*':
 			{
-			alt6=16;
+			alt7=16;
 			}
 			break;
 		case '/':
 			{
-			alt6=17;
+			alt7=17;
 			}
 			break;
 		case '%':
 			{
-			alt6=18;
+			alt7=18;
 			}
 			break;
 		case '=':
 			{
-			alt6=19;
+			alt7=19;
 			}
 			break;
 		case '!':
 			{
-			alt6=20;
+			alt7=20;
 			}
 			break;
 		case '>':
 			{
-			int LA6_21 = input.LA(2);
-			if ( (LA6_21=='=') ) {
-				alt6=21;
+			int LA7_21 = input.LA(2);
+			if ( (LA7_21=='=') ) {
+				alt7=21;
 			}
 
 			else {
-				alt6=23;
+				alt7=23;
 			}
 
 			}
 			break;
 		case '<':
 			{
-			int LA6_22 = input.LA(2);
-			if ( (LA6_22=='=') ) {
-				alt6=22;
+			int LA7_22 = input.LA(2);
+			if ( (LA7_22=='=') ) {
+				alt7=22;
 			}
 
 			else {
-				alt6=24;
+				alt7=24;
 			}
 
 			}
 			break;
 		case '&':
 			{
-			alt6=25;
+			alt7=25;
 			}
 			break;
 		case '|':
 			{
-			alt6=26;
+			alt7=26;
 			}
 			break;
 		case '0':
@@ -1028,7 +1090,7 @@ public class Valid2Lexer extends Lexer {
 		case '8':
 		case '9':
 			{
-			alt6=27;
+			alt7=27;
 			}
 			break;
 		case '\t':
@@ -1037,16 +1099,21 @@ public class Valid2Lexer extends Lexer {
 		case '\r':
 		case ' ':
 			{
-			alt6=28;
+			alt7=28;
+			}
+			break;
+		case '@':
+			{
+			alt7=29;
 			}
 			break;
 		default:
 			if (state.backtracking>0) {state.failed=true; return;}
 			NoViableAltException nvae =
-				new NoViableAltException("", 6, 0, input);
+				new NoViableAltException("", 7, 0, input);
 			throw nvae;
 		}
-		switch (alt6) {
+		switch (alt7) {
 			case 1 :
 				// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:1:10: TRUE_LITERAL
 				{
@@ -1243,6 +1310,13 @@ public class Valid2Lexer extends Lexer {
 
 				}
 				break;
+			case 29 :
+				// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:1:229: FUNCTION
+				{
+				mFUNCTION(); if (state.failed) return;
+
+				}
+				break;
 
 		}
 	}
@@ -1253,44 +1327,6 @@ public class Valid2Lexer extends Lexer {
 		// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:85:11: ( DIGIT )+ DOT ( DIGIT )+
 		{
 		// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:85:11: ( DIGIT )+
-		int cnt7=0;
-		loop7:
-		while (true) {
-			int alt7=2;
-			int LA7_0 = input.LA(1);
-			if ( ((LA7_0 >= '0' && LA7_0 <= '9')) ) {
-				alt7=1;
-			}
-
-			switch (alt7) {
-			case 1 :
-				// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:
-				{
-				if ( (input.LA(1) >= '0' && input.LA(1) <= '9') ) {
-					input.consume();
-					state.failed=false;
-				}
-				else {
-					if (state.backtracking>0) {state.failed=true; return;}
-					MismatchedSetException mse = new MismatchedSetException(null,input);
-					recover(mse);
-					throw mse;
-				}
-				}
-				break;
-
-			default :
-				if ( cnt7 >= 1 ) break loop7;
-				if (state.backtracking>0) {state.failed=true; return;}
-				EarlyExitException eee = new EarlyExitException(7, input);
-				throw eee;
-			}
-			cnt7++;
-		}
-
-		mDOT(); if (state.failed) return;
-
-		// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:85:26: ( DIGIT )+
 		int cnt8=0;
 		loop8:
 		while (true) {
@@ -1324,6 +1360,44 @@ public class Valid2Lexer extends Lexer {
 				throw eee;
 			}
 			cnt8++;
+		}
+
+		mDOT(); if (state.failed) return;
+
+		// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:85:26: ( DIGIT )+
+		int cnt9=0;
+		loop9:
+		while (true) {
+			int alt9=2;
+			int LA9_0 = input.LA(1);
+			if ( ((LA9_0 >= '0' && LA9_0 <= '9')) ) {
+				alt9=1;
+			}
+
+			switch (alt9) {
+			case 1 :
+				// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Lexer.g:
+				{
+				if ( (input.LA(1) >= '0' && input.LA(1) <= '9') ) {
+					input.consume();
+					state.failed=false;
+				}
+				else {
+					if (state.backtracking>0) {state.failed=true; return;}
+					MismatchedSetException mse = new MismatchedSetException(null,input);
+					recover(mse);
+					throw mse;
+				}
+				}
+				break;
+
+			default :
+				if ( cnt9 >= 1 ) break loop9;
+				if (state.backtracking>0) {state.failed=true; return;}
+				EarlyExitException eee = new EarlyExitException(9, input);
+				throw eee;
+			}
+			cnt9++;
 		}
 
 		}

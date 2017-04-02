@@ -20,11 +20,12 @@ public class TestExpression implements Types{
 
 
     public static void main(String ... args) throws IOException, RecognitionException {
-        Evaluator tmp = EvaluatorBuilder.builderEvaluator("a%2==0");
-        for(int i = 0; i < 10; i++) {
-            tmp.setVariable('a', MATHEMATICAL, i, false);
-            System.out.println(i +"=>"+ tmp.evaluate());
-        }
+        Evaluator tmp = EvaluatorBuilder.builderEvaluator("@LENGTH(a)>5");
+     //  for(int i = 0; i < 10; i++) {
+        String hola = "holass";
+            System.out.println(hola.length());
+            System.out.println(0 +"=>"+ tmp.evaluate2(hola));
+     //   }
     }
 
 }

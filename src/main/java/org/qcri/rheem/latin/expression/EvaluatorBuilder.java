@@ -23,6 +23,7 @@ public class EvaluatorBuilder implements Types{
 
         Tree ast = (Tree) parser.base().getTree();
 
+       // System.out.println(ast.toStringTree());
 
         lista = new ArrayList();
 
@@ -64,9 +65,30 @@ public class EvaluatorBuilder implements Types{
             }else{
 
                 String children = ast.getChild(i).toString();
-                int type = typeComponent(children);
+                int type = typeComponent(children, element.getTypeEle());
                 element.setType(type);
-                if(type == VALUE || type == VALUELOGIC){
+
+                switch (type){
+                    case VALUE:
+                        element.setValue(getNumber(children));
+                        break;
+                    case VALUELOGIC:
+                        element.setValueLogic(getLogic(children));
+                        break;
+                    case VALUESTRING:
+                        element.setValueString(children);
+                        break;
+                    case VARIABLE:
+                    case VARIABLELOGIC:
+                    case VARIABLESTRING:
+                        element.setVariable(children.charAt(0));
+                        break;
+                    default:
+                        break;
+                }
+
+                /*
+                if(type == VALUE || type == VALUELOGIC ){
                     if(isLogic(children)){
                         element.setValueLogic(getLogic(children));
                     }else {
@@ -78,9 +100,9 @@ public class EvaluatorBuilder implements Types{
                     }else {
                         element.setVariable(children.charAt(0));
                     }
-                }
+                }*/
             }
-            if(i == fin-2){
+            if(i == fin-2 || fin == 1){
                 element.setOperator(ast.getText());
             }
         }
@@ -94,7 +116,12 @@ public class EvaluatorBuilder implements Types{
     }
 
     public static int typeElement(String operator){
-        return (isOperatorLogica(operator))?LOGICAL:MATHEMATICAL;
+        if (isOperatorLogica(operator))
+            return LOGICAL;
+        if (isOperatorMathematical(operator))
+            return MATHEMATICAL;
+
+        return FUNC_STRING;
     }
 
     public static boolean isOperatorLogica(String evaluated){
@@ -105,8 +132,25 @@ public class EvaluatorBuilder implements Types{
         return operatorMathematical.contains(evaluated);
     }
 
-    public static int typeComponent(String evaluated){
-        return (isVariable(evaluated))? VARIABLE:  VALUE;
+    public static int typeComponent(String evaluated, int operator){
+        // is variable ??
+        if(isVariable(evaluated)) {
+            // --> what it is type of the variable??
+            switch (operator){
+                case FUNC_STRING  : return VARIABLESTRING;
+                case MATHEMATICAL : return VARIABLE;
+                case LOGICAL      : return VARIABLELOGIC;
+            }
+        }
+        //if not variable is value
+        // --> what it is type of the value??
+        if(isLogic(evaluated)){
+            return VALUELOGIC;
+        }
+        if(isMathematical(evaluated)){
+            return VALUE;
+        }
+        return VALUESTRING;
     }
 
     public static boolean isVariable(String evaluated){
@@ -127,6 +171,14 @@ public class EvaluatorBuilder implements Types{
         }else{
             return false;
         }
+    }
+    public static boolean isMathematical(String evaluated){
+        try {
+            double d = Double.parseDouble(evaluated);
+        } catch(NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 
     public static boolean getLogic(String evaluated){

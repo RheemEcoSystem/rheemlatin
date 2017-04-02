@@ -1,4 +1,4 @@
-// $ANTLR 3.5.2 src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g 2017-03-21 19:37:26
+// $ANTLR 3.5.2 src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g 2017-04-02 10:19:48
 
 package org.qcri.rheem.latin.expression;
 
@@ -12,11 +12,11 @@ import org.antlr.runtime.tree.TreeAdaptor;
 public class Valid2Parser extends Parser {
 	public static final String[] tokenNames = new String[] {
 		"<invalid>", "<EOR>", "<DOWN>", "<UP>", "AND_RW", "COLON", "COMMA", "DIGIT", 
-		"DOT", "EQUAL", "FALSE_LITERAL", "GR", "GR_EQUAL", "IDENT", "LE", "LEFT_BRACE", 
-		"LEFT_BRACKET", "LEFT_PAREN", "LETTER", "LE_EQUAL", "MOD", "NOT_EQUAL", 
-		"NUMBER", "OR_RW", "PLUS", "RIGHT_BRACE", "RIGHT_BRACKET", "RIGHT_PAREN", 
-		"SEMICOLON", "SLASH", "STAR", "SUB", "TRUE_LITERAL", "UNDERSCORE", "WS", 
-		"NOT_RW"
+		"DOT", "EQUAL", "FALSE_LITERAL", "FUNCTION", "GR", "GR_EQUAL", "IDENT", 
+		"LE", "LEFT_BRACE", "LEFT_BRACKET", "LEFT_PAREN", "LETTER", "LE_EQUAL", 
+		"MOD", "NOT_EQUAL", "NUMBER", "OR_RW", "PLUS", "RIGHT_BRACE", "RIGHT_BRACKET", 
+		"RIGHT_PAREN", "SEMICOLON", "SLASH", "STAR", "SUB", "TRUE_LITERAL", "UNDERSCORE", 
+		"WS", "NOT_RW"
 	};
 	public static final int EOF=-1;
 	public static final int AND_RW=4;
@@ -26,31 +26,32 @@ public class Valid2Parser extends Parser {
 	public static final int DOT=8;
 	public static final int EQUAL=9;
 	public static final int FALSE_LITERAL=10;
-	public static final int GR=11;
-	public static final int GR_EQUAL=12;
-	public static final int IDENT=13;
-	public static final int LE=14;
-	public static final int LEFT_BRACE=15;
-	public static final int LEFT_BRACKET=16;
-	public static final int LEFT_PAREN=17;
-	public static final int LETTER=18;
-	public static final int LE_EQUAL=19;
-	public static final int MOD=20;
-	public static final int NOT_EQUAL=21;
-	public static final int NUMBER=22;
-	public static final int OR_RW=23;
-	public static final int PLUS=24;
-	public static final int RIGHT_BRACE=25;
-	public static final int RIGHT_BRACKET=26;
-	public static final int RIGHT_PAREN=27;
-	public static final int SEMICOLON=28;
-	public static final int SLASH=29;
-	public static final int STAR=30;
-	public static final int SUB=31;
-	public static final int TRUE_LITERAL=32;
-	public static final int UNDERSCORE=33;
-	public static final int WS=34;
-	public static final int NOT_RW=35;
+	public static final int FUNCTION=11;
+	public static final int GR=12;
+	public static final int GR_EQUAL=13;
+	public static final int IDENT=14;
+	public static final int LE=15;
+	public static final int LEFT_BRACE=16;
+	public static final int LEFT_BRACKET=17;
+	public static final int LEFT_PAREN=18;
+	public static final int LETTER=19;
+	public static final int LE_EQUAL=20;
+	public static final int MOD=21;
+	public static final int NOT_EQUAL=22;
+	public static final int NUMBER=23;
+	public static final int OR_RW=24;
+	public static final int PLUS=25;
+	public static final int RIGHT_BRACE=26;
+	public static final int RIGHT_BRACKET=27;
+	public static final int RIGHT_PAREN=28;
+	public static final int SEMICOLON=29;
+	public static final int SLASH=30;
+	public static final int STAR=31;
+	public static final int SUB=32;
+	public static final int TRUE_LITERAL=33;
+	public static final int UNDERSCORE=34;
+	public static final int WS=35;
+	public static final int NOT_RW=36;
 
 	// delegates
 	public Parser[] getDelegates() {
@@ -789,7 +790,7 @@ public class Valid2Parser extends Parser {
 			if ( (LA10_0==SUB) ) {
 				alt10=1;
 			}
-			else if ( (LA10_0==IDENT||LA10_0==LEFT_PAREN||LA10_0==NUMBER||LA10_0==PLUS||LA10_0==NOT_RW) ) {
+			else if ( (LA10_0==FUNCTION||LA10_0==IDENT||LA10_0==LEFT_PAREN||LA10_0==NUMBER||LA10_0==PLUS||LA10_0==NOT_RW) ) {
 				alt10=2;
 			}
 
@@ -884,7 +885,7 @@ public class Valid2Parser extends Parser {
 
 
 	// $ANTLR start "expNot"
-	// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g:45:1: expNot : ( NOT_RW ^)? ( IDENT | NUMBER | ( LEFT_PAREN ! expr RIGHT_PAREN !) ) ;
+	// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g:45:1: expNot : ( NOT_RW ^)? ( IDENT | NUMBER | ( LEFT_PAREN ! expr RIGHT_PAREN !) | ( FUNCTION ^ LEFT_PAREN ! expr RIGHT_PAREN !) ) ;
 	public final Valid2Parser.expNot_return expNot() throws RecognitionException {
 		Valid2Parser.expNot_return retval = new Valid2Parser.expNot_return();
 		retval.start = input.LT(1);
@@ -896,17 +897,24 @@ public class Valid2Parser extends Parser {
 		Token NUMBER32=null;
 		Token LEFT_PAREN33=null;
 		Token RIGHT_PAREN35=null;
+		Token FUNCTION36=null;
+		Token LEFT_PAREN37=null;
+		Token RIGHT_PAREN39=null;
 		ParserRuleReturnScope expr34 =null;
+		ParserRuleReturnScope expr38 =null;
 
 		Object NOT_RW30_tree=null;
 		Object IDENT31_tree=null;
 		Object NUMBER32_tree=null;
 		Object LEFT_PAREN33_tree=null;
 		Object RIGHT_PAREN35_tree=null;
+		Object FUNCTION36_tree=null;
+		Object LEFT_PAREN37_tree=null;
+		Object RIGHT_PAREN39_tree=null;
 
 		try {
-			// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g:45:7: ( ( NOT_RW ^)? ( IDENT | NUMBER | ( LEFT_PAREN ! expr RIGHT_PAREN !) ) )
-			// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g:45:9: ( NOT_RW ^)? ( IDENT | NUMBER | ( LEFT_PAREN ! expr RIGHT_PAREN !) )
+			// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g:45:7: ( ( NOT_RW ^)? ( IDENT | NUMBER | ( LEFT_PAREN ! expr RIGHT_PAREN !) | ( FUNCTION ^ LEFT_PAREN ! expr RIGHT_PAREN !) ) )
+			// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g:45:9: ( NOT_RW ^)? ( IDENT | NUMBER | ( LEFT_PAREN ! expr RIGHT_PAREN !) | ( FUNCTION ^ LEFT_PAREN ! expr RIGHT_PAREN !) )
 			{
 			root_0 = (Object)adaptor.nil();
 
@@ -930,8 +938,8 @@ public class Valid2Parser extends Parser {
 
 			}
 
-			// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g:45:20: ( IDENT | NUMBER | ( LEFT_PAREN ! expr RIGHT_PAREN !) )
-			int alt12=3;
+			// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g:45:20: ( IDENT | NUMBER | ( LEFT_PAREN ! expr RIGHT_PAREN !) | ( FUNCTION ^ LEFT_PAREN ! expr RIGHT_PAREN !) )
+			int alt12=4;
 			switch ( input.LA(1) ) {
 			case IDENT:
 				{
@@ -946,6 +954,11 @@ public class Valid2Parser extends Parser {
 			case LEFT_PAREN:
 				{
 				alt12=3;
+				}
+				break;
+			case FUNCTION:
+				{
+				alt12=4;
 				}
 				break;
 			default:
@@ -990,6 +1003,28 @@ public class Valid2Parser extends Parser {
 
 					}
 					break;
+				case 4 :
+					// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g:45:66: ( FUNCTION ^ LEFT_PAREN ! expr RIGHT_PAREN !)
+					{
+					// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g:45:66: ( FUNCTION ^ LEFT_PAREN ! expr RIGHT_PAREN !)
+					// src/main/java/org/qcri/rheem/latin/expression/antlr/Valid2Parser.g:45:67: FUNCTION ^ LEFT_PAREN ! expr RIGHT_PAREN !
+					{
+					FUNCTION36=(Token)match(input,FUNCTION,FOLLOW_FUNCTION_in_expNot543); 
+					FUNCTION36_tree = (Object)adaptor.create(FUNCTION36);
+					root_0 = (Object)adaptor.becomeRoot(FUNCTION36_tree, root_0);
+
+					LEFT_PAREN37=(Token)match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_expNot546); 
+					pushFollow(FOLLOW_expr_in_expNot549);
+					expr38=expr();
+					state._fsp--;
+
+					adaptor.addChild(root_0, expr38.getTree());
+
+					RIGHT_PAREN39=(Token)match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_expNot551); 
+					}
+
+					}
+					break;
 
 			}
 
@@ -1019,37 +1054,41 @@ public class Valid2Parser extends Parser {
 
 	public static final BitSet FOLLOW_expr_in_base68 = new BitSet(new long[]{0x0000000000000000L});
 	public static final BitSet FOLLOW_EOF_in_base70 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_expAND_in_expr88 = new BitSet(new long[]{0x0000000000800002L});
-	public static final BitSet FOLLOW_OR_RW_in_expr92 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_expAND_in_expr95 = new BitSet(new long[]{0x0000000000800002L});
+	public static final BitSet FOLLOW_expAND_in_expr88 = new BitSet(new long[]{0x0000000001000002L});
+	public static final BitSet FOLLOW_OR_RW_in_expr92 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_expAND_in_expr95 = new BitSet(new long[]{0x0000000001000002L});
 	public static final BitSet FOLLOW_expCons_in_expAND113 = new BitSet(new long[]{0x0000000000000012L});
-	public static final BitSet FOLLOW_AND_RW_in_expAND116 = new BitSet(new long[]{0x0000000881422000L});
+	public static final BitSet FOLLOW_AND_RW_in_expAND116 = new BitSet(new long[]{0x0000001102844800L});
 	public static final BitSet FOLLOW_expCons_in_expAND119 = new BitSet(new long[]{0x0000000000000012L});
-	public static final BitSet FOLLOW_expSum_in_expCons136 = new BitSet(new long[]{0x0000000000285A02L});
-	public static final BitSet FOLLOW_EQUAL_in_expCons141 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_LE_EQUAL_in_expCons172 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_GR_EQUAL_in_expCons203 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_NOT_EQUAL_in_expCons234 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_GR_in_expCons265 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_LE_in_expCons296 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_expSum_in_expCons300 = new BitSet(new long[]{0x0000000000285A02L});
-	public static final BitSet FOLLOW_expProduct_in_expSum319 = new BitSet(new long[]{0x0000000081000002L});
-	public static final BitSet FOLLOW_PLUS_in_expSum324 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_SUB_in_expSum359 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_expProduct_in_expSum363 = new BitSet(new long[]{0x0000000081000002L});
-	public static final BitSet FOLLOW_expMinus_in_expProduct378 = new BitSet(new long[]{0x0000000060100002L});
-	public static final BitSet FOLLOW_STAR_in_expProduct382 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_SLASH_in_expProduct415 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_MOD_in_expProduct447 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_expMinus_in_expProduct452 = new BitSet(new long[]{0x0000000060100002L});
-	public static final BitSet FOLLOW_SUB_in_expMinus469 = new BitSet(new long[]{0x0000000800422000L});
+	public static final BitSet FOLLOW_expSum_in_expCons136 = new BitSet(new long[]{0x000000000050B202L});
+	public static final BitSet FOLLOW_EQUAL_in_expCons141 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_LE_EQUAL_in_expCons172 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_GR_EQUAL_in_expCons203 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_NOT_EQUAL_in_expCons234 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_GR_in_expCons265 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_LE_in_expCons296 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_expSum_in_expCons300 = new BitSet(new long[]{0x000000000050B202L});
+	public static final BitSet FOLLOW_expProduct_in_expSum319 = new BitSet(new long[]{0x0000000102000002L});
+	public static final BitSet FOLLOW_PLUS_in_expSum324 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_SUB_in_expSum359 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_expProduct_in_expSum363 = new BitSet(new long[]{0x0000000102000002L});
+	public static final BitSet FOLLOW_expMinus_in_expProduct378 = new BitSet(new long[]{0x00000000C0200002L});
+	public static final BitSet FOLLOW_STAR_in_expProduct382 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_SLASH_in_expProduct415 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_MOD_in_expProduct447 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_expMinus_in_expProduct452 = new BitSet(new long[]{0x00000000C0200002L});
+	public static final BitSet FOLLOW_SUB_in_expMinus469 = new BitSet(new long[]{0x0000001000844800L});
 	public static final BitSet FOLLOW_expNot_in_expMinus472 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_PLUS_in_expMinus493 = new BitSet(new long[]{0x0000000800422000L});
+	public static final BitSet FOLLOW_PLUS_in_expMinus493 = new BitSet(new long[]{0x0000001000844800L});
 	public static final BitSet FOLLOW_expNot_in_expMinus498 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_NOT_RW_in_expNot522 = new BitSet(new long[]{0x0000000000422000L});
+	public static final BitSet FOLLOW_NOT_RW_in_expNot522 = new BitSet(new long[]{0x0000000000844800L});
 	public static final BitSet FOLLOW_IDENT_in_expNot528 = new BitSet(new long[]{0x0000000000000002L});
 	public static final BitSet FOLLOW_NUMBER_in_expNot530 = new BitSet(new long[]{0x0000000000000002L});
-	public static final BitSet FOLLOW_LEFT_PAREN_in_expNot533 = new BitSet(new long[]{0x0000000881422000L});
-	public static final BitSet FOLLOW_expr_in_expNot536 = new BitSet(new long[]{0x0000000008000000L});
+	public static final BitSet FOLLOW_LEFT_PAREN_in_expNot533 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_expr_in_expNot536 = new BitSet(new long[]{0x0000000010000000L});
 	public static final BitSet FOLLOW_RIGHT_PAREN_in_expNot538 = new BitSet(new long[]{0x0000000000000002L});
+	public static final BitSet FOLLOW_FUNCTION_in_expNot543 = new BitSet(new long[]{0x0000000000040000L});
+	public static final BitSet FOLLOW_LEFT_PAREN_in_expNot546 = new BitSet(new long[]{0x0000001102844800L});
+	public static final BitSet FOLLOW_expr_in_expNot549 = new BitSet(new long[]{0x0000000010000000L});
+	public static final BitSet FOLLOW_RIGHT_PAREN_in_expNot551 = new BitSet(new long[]{0x0000000000000002L});
 }

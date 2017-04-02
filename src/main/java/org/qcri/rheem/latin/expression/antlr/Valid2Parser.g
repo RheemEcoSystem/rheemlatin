@@ -12,7 +12,7 @@ tokens
 }
 
 @header {
-package org.qcri.rheem.latin.expression.antlr;
+package org.qcri.rheem.latin.expression;
 }
 //=======================================================
 //Expressions
@@ -42,7 +42,8 @@ expMinus      : (SUB! expNot)
               | ((PLUS!)? expNot)
               ;
 
-expNot: (NOT_RW^)? (IDENT|NUMBER|(LEFT_PAREN! expr RIGHT_PAREN!));
+expNot: (NOT_RW^)? (IDENT|NUMBER|(LEFT_PAREN! expr RIGHT_PAREN!)|(FUNCTION^ LEFT_PAREN! expr RIGHT_PAREN!));
+
 
 
 //lit: REAL_LITERAL|INT_LITERAL;

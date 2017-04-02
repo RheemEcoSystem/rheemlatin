@@ -2,7 +2,7 @@ lexer grammar Valid2Lexer;
 
 @header
 {
-package org.qcri.rheem.latin.expression.antlr;
+package org.qcri.rheem.latin.expression;
 }
 
 
@@ -100,4 +100,7 @@ WS :    ((' ' | '\t' | '\f')
         | ( '\n' | '\r' )
         ){ $channel = HIDDEN; }
         ;
+
+FUNCTION : ('@' ('A'..'Z')+ )
+         ;
 
