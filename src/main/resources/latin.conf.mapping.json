@@ -1,0 +1,80 @@
+{
+  "mapping" : {
+    "rheem" : {
+      "package_latin" : "org.qcri.rheem.latin.plan.operator",
+      "extend_latin"  : "LatinOperator",
+      "package_rheem" : "org.qcri.rheem.basic.operators",
+      "extend_rheem"  : "org.qcri.rheem.core.plan.rheemplan.OperatorBase",
+      "class_reflex" : [
+        {
+          "name_latin": "FILTER",
+          "name_rheem": "FilterOperator",
+          "parameters": [
+              "predicate",
+              "class"
+          ]
+        },{
+          "name_latin": "JOIN",
+          "name_rheem": "JoinOperator",
+          "parameters": [
+              "function",
+              "function",
+              "class",
+              "class",
+              "class"
+          ]
+        },{
+          "name_latin": "LOAD",
+          "name_rheem": "TextFileSource",
+          "parameters": [
+              "string"
+          ]
+        },{
+          "name_latin": "STORE",
+          "name_rheem": "TextFileSink",
+          "parameters": [
+              "string",
+              "class"
+          ]
+        },{
+          "name_latin": "LOADJSON",
+          "name_rheem": "JSONSource",
+          "parameters": [
+            "string",
+            "string[]"
+          ]
+        },{
+          "name_latin": "LOADSQL",
+          "name_rheem": "PostgresTableSource",
+          "package"   : "org.qcri.rheem.postgres.operators",
+          "parameters": [
+            "string",
+            "string[]"
+          ]
+        },{
+          "name_latin": "MAP",
+          "name_rheem": "MapOperator",
+          "parameters": [
+            "function",
+            "class",
+            "class"
+          ]
+        },{
+          "name_latin": "DISTINCT",
+          "name_rheem": "DistinctOperator",
+          "parameters": [
+            "class"
+          ]
+        },{
+          "name_latin": "FLAPMAP",
+          "name_rheem": "FlatMapOperator",
+          "parameters": [
+            "function",
+            "class",
+            "class"
+          ]
+        }
+      ]
+    }
+  }
+}
