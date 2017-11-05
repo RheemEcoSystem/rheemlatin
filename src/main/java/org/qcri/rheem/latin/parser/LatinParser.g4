@@ -5,7 +5,8 @@ options {
 }
 
 @header {
-    import java.util.*;
+package org.qcri.rheem.latin.parser;
+import java.util.*;
 }
 
 
@@ -26,6 +27,7 @@ options {
     }
 
     public static Integer getNextPrecedence(Token op) {
+        System.out.println(op.getType()+"  ");
         Integer p = getPrecedence(op);
         if (op.getType() == PREOP)              return p;
         else if (op.getType() == BINOP)         return p+1;
@@ -52,8 +54,10 @@ statement :
        ID ASSING
        (    operator_statement
          |  source_statement
-       ) SEMI_COLON                   #BaseStatement
-   |   sink_statement SEMI_COLON      #SinkStatement
+       ) with? SEMI_COLON                   #BaseStatement
+   |   sink_statement with? SEMI_COLON      #SinkStatement
+
+
 ;
 
 operator_statement :
@@ -140,4 +144,8 @@ sub_id :
 boolean_const :
         TRUE
     |   FALSE
+;
+
+with :
+        WITH QUOTEDSTRING #namePlatform
 ;

@@ -1,10 +1,11 @@
 lexer grammar LatinLexer;
 
 tokens {
- PREOP, POSTOP, BINOP, ERROR, OPERATOR_NAME, FUNC_NAME }
+ PREOP, POSTOP, BINOP, ERROR, OPERATOR_NAME, FUNC_NAME, PLATFORM }
 
 @header {
-    import java.util.*;
+package org.qcri.rheem.latin.parser;
+import java.util.*;
 }
 
 
@@ -43,6 +44,10 @@ tokens {
     public static void addFunction(String name){
         nameFunctions.add(name);
         map.put(name, 5);
+    }
+
+    public static void addPlatform(String name){
+        map.put(name, 6);
     }
 
     private Deque<Token> deque = new LinkedList<Token>();
@@ -97,6 +102,10 @@ tokens {
             return getOperatorCombination(sequence);
         case FUNCTION:
             return getFunctionCombination(sequence);
+        case PLATFORM:
+            List<Token> seq = new ArrayList<Token>();
+            seq.add(0, new CommonToken(LatinParser.PLATFORM, sequence));
+            return seq;
         default:
             break;
         }
@@ -208,13 +217,15 @@ tokens {
                 return OperatorType.OPERATOR;
             case 5:
                 return OperatorType.FUNCTION;
+            case 6:
+                return OperatorType.PLATFORM;
             default:
                 break;
         }
         return null;
     }
 
-    private enum OperatorType { BINARY, PREFIX, POSTFIX, OPERATOR, FUNCTION };
+    private enum OperatorType { BINARY, PREFIX, POSTFIX, OPERATOR, FUNCTION, PLATFORM };
 
 
     /**
@@ -276,6 +287,7 @@ DATETIME  :   'DATETIME';
 STRING    :   'STRING';
 JSON      :   'JSON';
 SQL       :   'SQL';
+WITH      :   'WITH';
 DOT       :   '.';
 TRUE      :   'true';
 FALSE     :   'false';

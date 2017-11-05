@@ -11,6 +11,7 @@ public abstract class LatinOperator extends LatinElement {
     protected Class         classOutput    = null;
     protected String        aliasOutput    = null;
     protected ParametersTypes lambdas      = null;
+    protected String        platform       = null;
 
     protected LatinOperator(String name) {
         super(name);
@@ -21,6 +22,10 @@ public abstract class LatinOperator extends LatinElement {
         StringBuilder builder = new StringBuilder();
         builder.append("Op( ");
         builder.append(this.name);
+        if(this.platform != null){
+            builder.append(", platform: ");
+            builder.append(this.platform);
+        }
         builder.append(" ) -> \"");
         builder.append(this.alias);
         builder.append("\" ");
@@ -72,4 +77,11 @@ public abstract class LatinOperator extends LatinElement {
         return obj;
     }
 
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
 }

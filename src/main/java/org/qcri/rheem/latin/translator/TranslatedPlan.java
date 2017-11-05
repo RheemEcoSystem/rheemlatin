@@ -4,16 +4,19 @@ import org.qcri.rheem.core.api.RheemContext;
 import org.qcri.rheem.core.plan.rheemplan.Operator;
 import org.qcri.rheem.core.plan.rheemplan.RheemPlan;
 import org.qcri.rheem.core.plan.rheemplan.UnarySink;
+import org.qcri.rheem.core.platform.Platform;
 import org.qcri.rheem.java.Java;
 import org.qcri.rheem.latin.plan.LatinPlan;
 import org.qcri.rheem.latin.plan.operator.LatinOperator;
 import org.qcri.rheem.latin.plan.operator.OperatorInput;
 import org.qcri.rheem.latin.plan.operator.logical.SinkOperator;
 import org.qcri.rheem.postgres.Postgres;
+import org.qcri.rheem.spark.Spark;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by bertty on 11-04-17.
@@ -26,7 +29,12 @@ public class TranslatedPlan extends LatinPlan{
 
     private List<UnarySink> opSinkRheem  = null;
 
+    private static Map<String, Platform> platforms = null;
+
     public TranslatedPlan(LatinPlan plan){
+        if(platforms == null){
+            loadPlatform();
+        }
         operators      = plan.getOperators();
         expressions    = plan.getExpressions();
         alias          = plan.getAlias();
@@ -39,7 +47,7 @@ public class TranslatedPlan extends LatinPlan{
         this.rheemContext = new RheemContext();
         this.rheemContext.with(Java.basicPlugin());
         this.rheemContext.with(Postgres.plugin());
-        //this.rheemContext.with(Spark.basicPlugin());
+        this.rheemContext.with(Spark.basicPlugin());
     }
 
 
@@ -49,6 +57,8 @@ public class TranslatedPlan extends LatinPlan{
         HashMap<LatinOperator, Operator> map = new HashMap<>();
         for(LatinOperator op: this.operators){
             Operator opRheem = LoaderOperator.reflectOperator(op);
+            if(op.getPlatform() != null)
+                opRheem.addTargetPlatform(platforms.get(op.getPlatform()));
             this.operatorsRheem.add(opRheem);
             map.put(op, opRheem);
             if(op instanceof SinkOperator){
@@ -90,5 +100,9 @@ public class TranslatedPlan extends LatinPlan{
 
 
 
-
+    private void loadPlatform(){
+        platforms = new HashMap<>();
+        platforms.put("java", Java.platform());
+        platforms.put("spark", Spark.platform());
+    }
 }

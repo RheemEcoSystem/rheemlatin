@@ -203,12 +203,13 @@ public class ConvertListener implements LatinParserListener{
          *  la ruta de acceso debe entregar algun objeto para poder establecer el link de dicho elemento.
          * */
         //    operator.setClassOutput(String.class);
-
+        SourceOperator operator = OperatorBuilder.getOperatorSource(this.name_sourceOperator);
+        this.operator_actual = operator;
     }
 
     @Override
     public void exitSource_statement(LatinParser.Source_statementContext ctx) {
-        SourceOperator operator = OperatorBuilder.getOperatorSource(this.name_sourceOperator);
+        SourceOperator operator = (SourceOperator) this.operator_actual;
         operator.setPath_source(getString(ctx.QUOTEDSTRING().getText()));
 
         if(this.source_name_var != null)
@@ -465,6 +466,16 @@ public class ConvertListener implements LatinParserListener{
     @Override
     public void exitBoolean_const(LatinParser.Boolean_constContext ctx) {
 
+    }
+
+    @Override
+    public void enterNamePlatform(LatinParser.NamePlatformContext ctx) {
+
+    }
+
+    @Override
+    public void exitNamePlatform(LatinParser.NamePlatformContext ctx) {
+        this.operator_actual.setPlatform(getString(ctx.QUOTEDSTRING().getText()));
     }
 
 

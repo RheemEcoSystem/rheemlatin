@@ -56,11 +56,7 @@
         "type": "Source",
         "output": "org.qcri.rheem.basic.data.Record"
       },{
-        "name": "MAP",
-        "nfunction": "1",
-        "type": "UnaryToUnary"
-      },{
-        "name": "FLAPMAP",
+        "name": "FLATMAP",
         "nfunction": "1",
         "type": "UnaryToUnary"
       }

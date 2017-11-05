@@ -1,7 +1,7 @@
-// Generated from /Users/bertty/Qatar/xxxx/src/main/java/org/qcri/rheem/latin/parser/LatinParser.g4 by ANTLR 4.7
-package org.qcri.rheem.latin.parser;
+// Generated from LatinParser.g4 by ANTLR 4.7
 
-    import java.util.*;
+package org.qcri.rheem.latin.parser;
+import java.util.*;
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -224,4 +224,16 @@ public interface LatinParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBoolean_const(LatinParser.Boolean_constContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code namePlatform}
+	 * labeled alternative in {@link LatinParser#with}.
+	 * @param ctx the parse tree
+	 */
+	void enterNamePlatform(LatinParser.NamePlatformContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code namePlatform}
+	 * labeled alternative in {@link LatinParser#with}.
+	 * @param ctx the parse tree
+	 */
+	void exitNamePlatform(LatinParser.NamePlatformContext ctx);
 }

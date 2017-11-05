@@ -1,7 +1,7 @@
-// Generated from /Users/bertty/Qatar/xxxx/src/main/java/org/qcri/rheem/latin/parser/LatinParser.g4 by ANTLR 4.7
-package org.qcri.rheem.latin.parser;
+// Generated from LatinParser.g4 by ANTLR 4.7
 
-    import java.util.*;
+package org.qcri.rheem.latin.parser;
+import java.util.*;
 
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -254,6 +254,18 @@ public class LatinParserBaseListener implements LatinParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBoolean_const(LatinParser.Boolean_constContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNamePlatform(LatinParser.NamePlatformContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNamePlatform(LatinParser.NamePlatformContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
