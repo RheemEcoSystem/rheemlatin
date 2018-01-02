@@ -268,30 +268,36 @@ ACCO_LEFT :   '{';
 ACCO_RIGHT:   '}';
 COR_LEFT  :   '[';
 COR_RIGHT :   ']';
-LOAD      :   'LOAD';
-AS        :   'AS';
+LOAD      :   'LOAD';//|'load';
+AS        :   'AS';//|'as';
 COLON     :   ':';
 COMA      :   ',';
 SEMI_COLON:   ';';
-ID        :   ('a'..'z') ('a'..'z'|'0'..'9'|'_'|'-')*;
+ID        :   ('a'..'z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'-')*;
 ASSING    :   '=';
 ARROW     :   '->';
-BOOLEAN   :   'BOOLEAN';
-INT       :   'INT';
-LONG      :   'LONG';
-FLOAT     :   'FLOAT';
-BIGDECIMAL:   'BIGDECIMAL';
-BIGINTEGER:   'BIGINTEGER';
-DOUBLE    :   'DOUBLE';
-DATETIME  :   'DATETIME';
-STRING    :   'STRING';
-JSON      :   'JSON';
-SQL       :   'SQL';
-WITH      :   'WITH';
+ARROW_I   :   '<-';
+BOOLEAN   :   'BOOLEAN';//|'boolean';
+INT       :   'INT';//|'int';
+LONG      :   'LONG';//|'long';
+FLOAT     :   'FLOAT';//|'float';
+BIGDECIMAL:   'BIGDECIMAL';//|'bigdecimal';
+BIGINTEGER:   'BIGINTEGER';//|'biginteger';
+DOUBLE    :   'DOUBLE';//|'double';
+DATETIME  :   'DATETIME';//|'datetime';
+STRING    :   'STRING';//|'string';
+JSON      :   'JSON';//|'json';
+SQL       :   'SQL';//|'sql';
+WITH      :   'WITH';//|'with';
 DOT       :   '.';
-TRUE      :   'true';
-FALSE     :   'false';
-
+TRUE      :   'TRUE';//'true'|'TRUE'|'True';
+FALSE     :   'FALSE' ;//'false'|'FALSE'|'False';
+BAG       :   'BAG';//|'bag';
+IMPORT    :   'IMPORT';//|'import'; //import an unique class or method for work in the rheemlatin
+INCLUDE   :   'INCLUDE';//|'include'; //import a script of the rheemLatin inside of other is like copy and paste with parameters
+//deberia ser algo al estilo ID = INCLUDE 'path' ID*;
+BROADCAST :   'BROADCAST';//|'broadcast';
+PLATFORM  :   'PLATFORM';//|'platform';
 
 
 
@@ -316,15 +322,19 @@ MULTILINE_QUOTEDSTRING :  '\'' (   ( ~ ( '\'' | '\\' ) )
                                )*
                 '\''
 ;
-
-COMMENT : '\\*' (   ( ~ ( '\'' | '\\' ) )
+/*
+COMMENT : '/*' (   ( ~ ( '\'' | '\\' ) )
                                                  | ( '\\' ( ( 'N' | 'T' | 'B' | 'R' | 'F' | '\\' | '\'' | 'n' | 'r' ) ) )
                                                  | ( '\\U' ( '0'..'9' | 'A'..'F' )
                                                            ( '0'..'9' | 'A'..'F' )
                                                            ( '0'..'9' | 'A'..'F' )
                                                            ( '0'..'9' | 'A'..'F' )  )
-                                               )* '*\\' -> skip;
+                                               )* '* /' -> skip;
+*/
 
+
+COMMENT : '/*' .*? '*/' -> skip;
+LINE_COMMENT : '//' ~[\r\n]* -> skip;
 WS        :   [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
 
 SYMBOL

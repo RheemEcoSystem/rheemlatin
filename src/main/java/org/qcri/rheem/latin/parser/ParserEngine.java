@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.qcri.rheem.latin.LatinEngine;
 import org.qcri.rheem.latin.plan.LatinPlan;
+import org.qcri.rheem.latin.util.LatinException;
 
 import java.io.IOException;
 
@@ -34,7 +35,6 @@ public class ParserEngine extends LatinEngine {
             LatinParser parser       = new LatinParser(tokens);
 
             ParserRuleContext ast    = parser.query();
-
             ConvertListener listener = new ConvertListener();
             ParseTreeWalker walker   = new ParseTreeWalker();
 
@@ -45,6 +45,9 @@ public class ParserEngine extends LatinEngine {
             return this.plan;
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (LatinException e){
+            e.printStackTrace();
+            System.exit(1);
         }
         return null;
     }

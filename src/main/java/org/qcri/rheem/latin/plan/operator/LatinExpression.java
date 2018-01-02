@@ -1,5 +1,7 @@
 package org.qcri.rheem.latin.plan.operator;
 
+import org.qcri.rheem.latin.plan.LatinElement;
+
 /**
  * Created by bertty on 06-04-17.
  */
@@ -43,4 +45,13 @@ public abstract class LatinExpression extends LatinElement {
     public abstract void goFirstChildren();
 
     public abstract int countChildren();
+
+    public boolean isImplemented(){
+        return false;
+    }
+
+    public Object getImplementation(){
+        return null;
+    }
+
 }

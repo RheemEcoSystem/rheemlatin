@@ -66,6 +66,7 @@ public class TranslatedPlan extends LatinPlan{
             }
         }
 
+
         for(LatinOperator op: this.operators){
             if( ! (op instanceof OperatorInput) ){
                 continue;

@@ -45,6 +45,18 @@ public interface LatinParserListener extends ParseTreeListener {
 	 */
 	void exitSinkStatement(LatinParser.SinkStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code BagStatement}
+	 * labeled alternative in {@link LatinParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterBagStatement(LatinParser.BagStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code BagStatement}
+	 * labeled alternative in {@link LatinParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitBagStatement(LatinParser.BagStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code OperatorStatement}
 	 * labeled alternative in {@link LatinParser#operator_statement}.
 	 * @param ctx the parse tree
@@ -66,6 +78,16 @@ public interface LatinParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitLambda(LatinParser.LambdaContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LatinParser#real_function}.
+	 * @param ctx the parse tree
+	 */
+	void enterReal_function(LatinParser.Real_functionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LatinParser#real_function}.
+	 * @param ctx the parse tree
+	 */
+	void exitReal_function(LatinParser.Real_functionContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link LatinParser#type}.
 	 * @param ctx the parse tree
@@ -226,14 +248,106 @@ public interface LatinParserListener extends ParseTreeListener {
 	void exitBoolean_const(LatinParser.Boolean_constContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code namePlatform}
-	 * labeled alternative in {@link LatinParser#with}.
+	 * labeled alternative in {@link LatinParser#with_platform}.
 	 * @param ctx the parse tree
 	 */
 	void enterNamePlatform(LatinParser.NamePlatformContext ctx);
 	/**
 	 * Exit a parse tree produced by the {@code namePlatform}
-	 * labeled alternative in {@link LatinParser#with}.
+	 * labeled alternative in {@link LatinParser#with_platform}.
 	 * @param ctx the parse tree
 	 */
 	void exitNamePlatform(LatinParser.NamePlatformContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LatinParser#with_broadcast}.
+	 * @param ctx the parse tree
+	 */
+	void enterWith_broadcast(LatinParser.With_broadcastContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LatinParser#with_broadcast}.
+	 * @param ctx the parse tree
+	 */
+	void exitWith_broadcast(LatinParser.With_broadcastContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LatinParser#bag_stattement}.
+	 * @param ctx the parse tree
+	 */
+	void enterBag_stattement(LatinParser.Bag_stattementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LatinParser#bag_stattement}.
+	 * @param ctx the parse tree
+	 */
+	void exitBag_stattement(LatinParser.Bag_stattementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LatinParser#bag_header}.
+	 * @param ctx the parse tree
+	 */
+	void enterBag_header(LatinParser.Bag_headerContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LatinParser#bag_header}.
+	 * @param ctx the parse tree
+	 */
+	void exitBag_header(LatinParser.Bag_headerContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LatinParser#bag_header_titles}.
+	 * @param ctx the parse tree
+	 */
+	void enterBag_header_titles(LatinParser.Bag_header_titlesContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LatinParser#bag_header_titles}.
+	 * @param ctx the parse tree
+	 */
+	void exitBag_header_titles(LatinParser.Bag_header_titlesContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LatinParser#bag_header_element}.
+	 * @param ctx the parse tree
+	 */
+	void enterBag_header_element(LatinParser.Bag_header_elementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LatinParser#bag_header_element}.
+	 * @param ctx the parse tree
+	 */
+	void exitBag_header_element(LatinParser.Bag_header_elementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LatinParser#bag_header_params}.
+	 * @param ctx the parse tree
+	 */
+	void enterBag_header_params(LatinParser.Bag_header_paramsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LatinParser#bag_header_params}.
+	 * @param ctx the parse tree
+	 */
+	void exitBag_header_params(LatinParser.Bag_header_paramsContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LatinParser#bag_set_param}.
+	 * @param ctx the parse tree
+	 */
+	void enterBag_set_param(LatinParser.Bag_set_paramContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LatinParser#bag_set_param}.
+	 * @param ctx the parse tree
+	 */
+	void exitBag_set_param(LatinParser.Bag_set_paramContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ClassDefine}
+	 * labeled alternative in {@link LatinParser#class_define}.
+	 * @param ctx the parse tree
+	 */
+	void enterClassDefine(LatinParser.ClassDefineContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ClassDefine}
+	 * labeled alternative in {@link LatinParser#class_define}.
+	 * @param ctx the parse tree
+	 */
+	void exitClassDefine(LatinParser.ClassDefineContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LatinParser#include_statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterInclude_statement(LatinParser.Include_statementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LatinParser#include_statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitInclude_statement(LatinParser.Include_statementContext ctx);
 }

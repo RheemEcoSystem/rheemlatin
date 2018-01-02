@@ -1,17 +1,19 @@
 package org.qcri.rheem.latin.plan.operator;
 
+import org.qcri.rheem.latin.plan.LatinElement;
 import org.qcri.rheem.latin.reflexion.ParametersTypes;
 
 /**
  * Created by bertty on 06-04-17.
  */
 public abstract class LatinOperator extends LatinElement {
-    protected String        alias          = null;
-    protected LatinOperator operatorOutput = null;
-    protected Class         classOutput    = null;
-    protected String        aliasOutput    = null;
-    protected ParametersTypes lambdas      = null;
-    protected String        platform       = null;
+    protected String          alias          = null;
+    protected LatinOperator   operatorOutput = null;
+    protected Class           classOutput    = null;
+    protected String          aliasOutput    = null;
+    protected ParametersTypes lambdas        = null;
+    protected String          platform       = null;
+    protected String          broadcast      = null;
 
     protected LatinOperator(String name) {
         super(name);
@@ -25,6 +27,10 @@ public abstract class LatinOperator extends LatinElement {
         if(this.platform != null){
             builder.append(", platform: ");
             builder.append(this.platform);
+        }
+        if(this.broadcast != null){
+            builder.append(", broadcast: ");
+            builder.append(this.broadcast);
         }
         builder.append(" ) -> \"");
         builder.append(this.alias);
@@ -83,5 +89,9 @@ public abstract class LatinOperator extends LatinElement {
 
     public void setPlatform(String platform) {
         this.platform = platform;
+    }
+
+    public void setBroadcast(String alias_broadcast) {
+        this.broadcast = alias_broadcast;
     }
 }

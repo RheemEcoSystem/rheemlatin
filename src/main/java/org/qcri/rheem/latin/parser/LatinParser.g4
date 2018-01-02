@@ -47,35 +47,45 @@ import java.util.*;
 }
 
 query :
-        statement*
+    (
+        statement
+    |   class_define
+    |   bag_set_param
+    |   include_statement
+    )*
 ;
 
 statement :
-       ID ASSING
-       (    operator_statement
-         |  source_statement
-       ) with? SEMI_COLON                   #BaseStatement
-   |   sink_statement with? SEMI_COLON      #SinkStatement
-
+        ID ASSING
+           (    operator_statement
+             |  source_statement
+           ) with_platform? SEMI_COLON               #BaseStatement
+   |   sink_statement with_platform? SEMI_COLON      #SinkStatement
+   |   ID ASSING bag_stattement SEMI_COLON           #BagStatement
 
 ;
 
 operator_statement :
-        name=OPERATOR_NAME (lambda)? (COMA lambda)* #OperatorStatement
+        name=OPERATOR_NAME (lambda)? (COMA lambda)* with_broadcast? #OperatorStatement
 ;
 
 lambda :
         ID type?
     |   ID ARROW ACCO_LEFT expr[0] ACCO_RIGHT type?
     |   expr[0]
+    |   real_function
+;
+
+real_function :
+    ID ARROW ID DOT ID PLEFT PRIGHT type ?
 ;
 
 type :
-        COLON (BOOLEAN|INT|LONG|FLOAT|BIGDECIMAL|BIGINTEGER|DOUBLE|DATETIME|STRING)
+        COLON (BOOLEAN|INT|LONG|FLOAT|BIGDECIMAL|BIGINTEGER|DOUBLE|DATETIME|STRING|ID)
 ;
 
 source_statement :
-        LOAD QUOTEDSTRING as_clause*
+        LOAD QUOTEDSTRING as_clause?
 ;
 
 as_clause :
@@ -95,20 +105,6 @@ pair :
 sink_statement :
         name=OPERATOR_NAME ID QUOTEDSTRING
 ;
-/*
-function_statement
-    :   func_name
-    |   func_name PLEFT func_args* PRIGHT
-    ;
-
-func_name
-    :
-    ;
-
-func_args
-    :
-    ;
-*/
 
 expr [int _p] :
         atom
@@ -146,6 +142,43 @@ boolean_const :
     |   FALSE
 ;
 
-with :
-        WITH QUOTEDSTRING #namePlatform
+with_platform :
+        WITH PLATFORM QUOTEDSTRING #namePlatform
+;
+
+with_broadcast :
+        WITH BROADCAST ID
+;
+
+bag_stattement :
+    BAG PLEFT bag_header? PRIGHT ARROW_I ID
+;
+
+bag_header :
+     bag_header_titles ( COMA bag_header_params )*
+    | bag_header_params ( COMA bag_header_params )*
+;
+
+bag_header_titles :
+    COR_LEFT ( bag_header_element (COMA bag_header_element)* ) COR_RIGHT
+;
+
+bag_header_element :
+    QUOTEDSTRING (type)?
+;
+
+bag_header_params:
+    ID ASSING constant
+;
+
+bag_set_param :
+    ID DOT ID ARROW_I (constant | bag_header_titles) SEMI_COLON
+;
+
+class_define :
+    IMPORT QUOTEDSTRING AS ID SEMI_COLON #ClassDefine
+;
+
+include_statement :
+    ID ASSING INCLUDE QUOTEDSTRING PLEFT ID+ PRIGHT SEMI_COLON
 ;

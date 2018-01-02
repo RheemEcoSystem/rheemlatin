@@ -1,4 +1,4 @@
-package org.qcri.rheem.latin.plan.operator;
+package org.qcri.rheem.latin.plan;
 
 /**
  * Created by bertty on 06-04-17.

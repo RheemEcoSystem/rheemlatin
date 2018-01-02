@@ -6,6 +6,7 @@ import org.qcri.rheem.latin.plan.operator.LatinOperator;
 import org.qcri.rheem.latin.plan.operator.OperatorInput;
 import org.qcri.rheem.latin.translator.expression.BuilderExpression;
 import org.qcri.rheem.latin.translator.expression.Expression;
+import org.qcri.rheem.latin.util.LatinException;
 
 /**
  * Created by bertty on 06-04-17.
@@ -129,15 +130,31 @@ public class ManyOperator extends LatinOperator implements OperatorInput {
         int expre_index = 0;
         for(int i = 0; i < params.length; i++){
             if( params[i].equals("function") || params[i].equals("predicate") ) {
+                if(this.expressionInput[expre_index].isImplemented()){
+                    Object fun = this.expressionInput[expre_index].getImplementation();
+                    if( fun == null ){
+                        //TODO: create a exception with good message
+                        throw new LatinException("We have a problem with the implementaion");
+                    }
+                    if (params[i].equals("function")) {
+                        obj[i] = (FunctionDescriptor.SerializableFunction) fun;
+                    }
+                    if (params[i].equals("predicate")) {
+                        obj[i] = (FunctionDescriptor.SerializablePredicate) fun;
+                    }
+                    continue;
+                }
+
+
                 if (params[i].equals("function")) {
                     Expression expr = BuilderExpression.builderExpression(this.expressionInput[expre_index]);
                     obj[i] = (FunctionDescriptor.SerializableFunction) a -> expr.evaluate(a);
-                    class_index++;
+                    expre_index++;
                 }
                 if (params[i].equals("predicate")) {
                     Expression expr = BuilderExpression.builderExpression(this.expressionInput[expre_index]);
                     obj[i] = (FunctionDescriptor.SerializablePredicate) a -> (Boolean) expr.evaluate(a);
-                    class_index++;
+                    expre_index++;
                 }
             }
             if(params[i].equals("class")){

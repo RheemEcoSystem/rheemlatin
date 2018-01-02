@@ -4,14 +4,16 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.qcri.rheem.latin.plan.LatinPlan;
-import org.qcri.rheem.latin.plan.operator.LatinExpression;
-import org.qcri.rheem.latin.plan.operator.LatinOperator;
-import org.qcri.rheem.latin.plan.operator.OperatorBuilder;
-import org.qcri.rheem.latin.plan.operator.OperatorInput;
+import org.qcri.rheem.latin.plan.addons.enviroment.LatinEnviroment;
+import org.qcri.rheem.latin.plan.addons.enviroment.LatinImportClass;
+import org.qcri.rheem.latin.plan.addons.structure.Bag.LatinBag;
+import org.qcri.rheem.latin.plan.addons.structure.LatinStructure;
+import org.qcri.rheem.latin.plan.operator.*;
 import org.qcri.rheem.latin.plan.operator.expression.*;
 import org.qcri.rheem.latin.plan.operator.logical.ManyOperator;
 import org.qcri.rheem.latin.plan.operator.logical.SinkOperator;
 import org.qcri.rheem.latin.plan.operator.logical.SourceOperator;
+import org.qcri.rheem.latin.util.LatinException;
 
 import java.util.*;
 
@@ -20,9 +22,10 @@ import java.util.*;
  */
 public class ConvertListener implements LatinParserListener{
     private AbstractPlan plan = null;
-
+//TODO: ver si se envian a los siguiente step o se pierden
     private Stack<LatinExpression> expressions  = null;
 
+    private Collection<String> all_alias = null;
 
     private List<LatinOperator> operators    = null;
 
@@ -32,7 +35,7 @@ public class ConvertListener implements LatinParserListener{
 
     private LatinOperator operator_actual = null;
 
-    private Deque<String> alias = null;
+    private Deque<String> input_alias = null;
 
     private String alias_actual = null;
 
@@ -43,7 +46,18 @@ public class ConvertListener implements LatinParserListener{
     private String name_sourceOperator;
 
     private List<String> source_name_var;
+
     private List<String> source_type_var;
+
+    private Map<String, LatinEnviroment> enviromentMap = null;
+
+    private Map<String, LatinStructure> structureMap = null;
+
+    private String alias_bag_current = null;
+
+    private LatinStructure structure_curret = null;
+
+    private String type_current = null;
 
     public ConvertListener(){
         this.plan        = new AbstractPlan();
@@ -51,9 +65,12 @@ public class ConvertListener implements LatinParserListener{
         this.operators   = new ArrayList<LatinOperator>();
         this.constants   = new Stack<ConstantExpression>();
         this.map_alias   = new HashMap<String, LatinOperator>();
-        this.alias       = new LinkedList<String>();
+        this.input_alias      = new LinkedList<String>();
         this.sinkOperators   = new ArrayList<SinkOperator>();
         this.sourceOperators = new ArrayList<SourceOperator>();
+        this.all_alias     = new ArrayList<String>();
+        this.enviromentMap = new HashMap<String, LatinEnviroment>();
+        this.structureMap  = new HashMap<String, LatinStructure>();
     }
 
     public LatinPlan getPlan(){
@@ -96,6 +113,8 @@ public class ConvertListener implements LatinParserListener{
             this.plan.setExpressions(this.expressions);
             this.plan.setSinkOperators(this.sinkOperators);
             this.plan.setSourceOperators(this.sourceOperators);
+            this.plan.setEnviroments(this.enviromentMap);
+            //TODO: agregar el ambiente y los estructureas
         }catch (Exception ex){
             ex.printStackTrace();
             System.exit(-105);
@@ -105,6 +124,7 @@ public class ConvertListener implements LatinParserListener{
     @Override
     public void enterBaseStatement(LatinParser.BaseStatementContext ctx) {
         this.alias_actual = ctx.ID().getText();
+        addAlias(this.alias_actual);
     }
 
     @Override
@@ -121,6 +141,27 @@ public class ConvertListener implements LatinParserListener{
 
     }
 
+    @Override
+    public void enterBagStatement(LatinParser.BagStatementContext ctx) {
+
+        if( this.alias_bag_current != null ){
+            //TODO: make a good exception description
+            throw new LatinException("the alias bag have a problem");
+        }
+        String alias = ctx.ID().getText();
+       // System.out.println("entrando BAG: "+alias);
+        this.alias_bag_current = alias;
+        addAlias(this.alias_bag_current);
+        this.structure_curret = new LatinBag(this.alias_bag_current);
+    }
+
+    @Override
+    public void exitBagStatement(LatinParser.BagStatementContext ctx) {
+        this.structureMap.put(this.alias_bag_current, this.structure_curret);
+        this.structure_curret = null;
+        this.alias_bag_current = null;
+    }
+
 
     @Override
     public void enterOperatorStatement(LatinParser.OperatorStatementContext ctx) {
@@ -129,13 +170,11 @@ public class ConvertListener implements LatinParserListener{
         operator.setAlias(this.alias_actual);
         this.operators.add(operator);
         this.operator_actual = operator;
-
-
     }
 
     @Override
     public void exitOperatorStatement(LatinParser.OperatorStatementContext ctx){
-        if(this.alias.size() ==  0){
+        if(this.input_alias.size() ==  0){
             return;
         }
 
@@ -143,18 +182,18 @@ public class ConvertListener implements LatinParserListener{
             return;
         }
 
-        if(this.alias.size() != ((ManyOperator)this.operator_actual).getNinputs()){
+        if(this.input_alias.size() != ((ManyOperator)this.operator_actual).getNinputs()){
             /**
-             * GENERARA EXCEPTION para esta situacion
+             * TODO: GENERARA EXCEPTION para esta situacion
              */
             //throw new Exception("the quantity alias is diferent");
-            this.alias.clear();
+            this.input_alias.clear();
             return;
         }
 
         int i = 0;
         ManyOperator tmp = (ManyOperator)this.operator_actual;
-        for(String name: this.alias){
+        for(String name: this.input_alias){
             tmp.setAliasInput(i++, name);
         }
         if(tmp.getNinputs() != 0 && this.expressions.size() <= tmp.getNinputs()) {
@@ -168,7 +207,7 @@ public class ConvertListener implements LatinParserListener{
         }
        // this.expressions = null;
 
-        this.alias.clear();
+        this.input_alias.clear();
 
     }
 
@@ -177,12 +216,44 @@ public class ConvertListener implements LatinParserListener{
     @Override
     public void enterLambda(LatinParser.LambdaContext ctx) {
         if( ctx.ID() != null ){
-            this.alias.add(ctx.ID().getText());
+            this.input_alias.add(ctx.ID().getText());
         }
     }
 
     @Override
     public void exitLambda(LatinParser.LambdaContext ctx) {
+    }
+
+    @Override
+    public void enterReal_function(LatinParser.Real_functionContext ctx) {
+        String alias       = ctx.ID().get(0).toString();
+        String class_name  = ctx.ID().get(1).toString();
+        String method_name = ctx.ID().get(2).toString();
+
+        String _alias  = class_name+"#"+method_name;
+
+        if( ! this.expressions.empty() ){
+            //TODO: create a good description
+            throw new LatinException("error with the function");
+        }
+
+        if( !this.enviromentMap.containsKey(class_name)){
+            //TODO: create a good description
+            throw new LatinException("la clase no es clase");
+        }
+
+        LatinImportClass clazz = (LatinImportClass) this.enviromentMap.get(class_name);
+
+        RealFunctionExpression real = new RealFunctionExpression(_alias, clazz, method_name );
+
+        this.expressions.push(real);
+        this.input_alias.push(alias);
+
+    }
+
+    @Override
+    public void exitReal_function(LatinParser.Real_functionContext ctx) {
+
     }
 
     @Override
@@ -192,7 +263,43 @@ public class ConvertListener implements LatinParserListener{
 
     @Override
     public void exitType(LatinParser.TypeContext ctx) {
+        String real_type = null;
+        if(ctx.ID() != null){
+            real_type = ctx.ID().getText();
 
+        }else  if(ctx.BOOLEAN() != null){
+            real_type = ctx.BOOLEAN().getText();
+
+        }else  if(ctx.INT() != null){
+            real_type = ctx.INT().getText();
+
+        }else  if(ctx.LONG() != null){
+            real_type = ctx.LONG().getText();
+
+        }else  if(ctx.FLOAT() != null){
+            real_type = ctx.FLOAT().getText();
+
+        }else  if(ctx.BIGDECIMAL() != null){
+            real_type = ctx.BIGDECIMAL().getText();
+
+        }else  if(ctx.BIGINTEGER() != null){
+            real_type = ctx.BIGINTEGER().getText();
+
+        }else  if(ctx.DOUBLE() != null){
+            real_type = ctx.DOUBLE().getText();
+
+        }else  if(ctx.DATETIME() != null){
+            real_type = ctx.DATETIME().getText();
+
+        }else  if(ctx.STRING() != null){
+            real_type = ctx.STRING().getText();
+        }
+
+        if(this.type_current != null){
+            throw new LatinException("the type \""+this.type_current+"\" is never used");
+        }
+        this.type_current = real_type;
+       // System.out.println("tu type sexy: "+this.type_current);
     }
 
 
@@ -478,6 +585,137 @@ public class ConvertListener implements LatinParserListener{
         this.operator_actual.setPlatform(getString(ctx.QUOTEDSTRING().getText()));
     }
 
+    @Override
+    public void enterWith_broadcast(LatinParser.With_broadcastContext ctx) {
+        this.operator_actual.setBroadcast(ctx.ID().toString());
+    }
+
+    @Override
+    public void exitWith_broadcast(LatinParser.With_broadcastContext ctx) {
+
+    }
+
+    @Override
+    public void enterBag_stattement(LatinParser.Bag_stattementContext ctx) {
+        String alias_input = ctx.ID().getText();
+        if(!existAlias(alias_input)){
+            //TODO: create a best description to the exception
+            throw new LatinException("Alias not found in the previous elements");
+        }
+       // System.out.println("?===== "+alias_input);
+        ((LatinBag)this.structure_curret).setAliasInput(alias_input);
+    }
+
+    @Override
+    public void exitBag_stattement(LatinParser.Bag_stattementContext ctx) {
+    }
+
+    @Override
+    public void enterBag_header(LatinParser.Bag_headerContext ctx) {
+
+    }
+
+    @Override
+    public void exitBag_header(LatinParser.Bag_headerContext ctx) {
+
+    }
+
+    @Override
+    public void enterBag_header_titles(LatinParser.Bag_header_titlesContext ctx) {
+        if( this.structure_curret == null ){
+            //TODO: Write a exception that explain more the problem
+            throw new LatinException("is not posible assign the parametres");
+        }
+        ((LatinBag)this.structure_curret).openStage();
+    }
+
+    @Override
+    public void exitBag_header_titles(LatinParser.Bag_header_titlesContext ctx) {
+        if( this.structure_curret == null ){
+            //TODO: Write a exception that explain more the problem
+            throw new LatinException("is not posible assign the parametres");
+        }
+        ((LatinBag)this.structure_curret).closeStage();
+    }
+
+    @Override
+    public void enterBag_header_element(LatinParser.Bag_header_elementContext ctx) {
+        //System.out.println(ctx.QUOTEDSTRING());
+        if( this.type_current != null ){
+            //TODO: Write a exception that explain more the problem
+            throw new LatinException("The Type is not null for this processing "+this.type_current);
+        }
+    }
+
+    @Override
+    public void exitBag_header_element(LatinParser.Bag_header_elementContext ctx) {
+      //  System.out.println(ctx.QUOTEDSTRING());
+        if( this.type_current == null ){
+            this.type_current = "STRING";
+        }
+       // System.out.println("type is: "+this.type_current);
+        if( this.structure_curret == null ){
+            //TODO: Write a exception that explain more the problem
+            throw new LatinException("is not posible assign the parametres");
+        }
+        ((LatinBag)this.structure_curret).addHeader(ctx.QUOTEDSTRING().toString(), this.type_current);
+        this.type_current = null;
+    }
+
+    @Override
+    public void enterBag_header_params(LatinParser.Bag_header_paramsContext ctx) {
+
+    }
+
+    @Override
+    public void exitBag_header_params(LatinParser.Bag_header_paramsContext ctx) {
+
+    }
+
+    @Override
+    public void enterBag_set_param(LatinParser.Bag_set_paramContext ctx) {
+        if(this.alias_bag_current != null){
+            throw new LatinException("The current bag is not null, the parameters is not setting how correspond");
+        }
+        this.alias_bag_current = ctx.ID(0).getText();
+        this.structure_curret = this.structureMap.get(this.alias_bag_current);
+     //   System.out.println("ajhaskjhdakjsdjkashdkjashdljashjd");
+   //     System.out.println(this.alias_bag_current);
+
+        //if(this.structure_curret != null)
+       //     System.out.println("tengo algo");
+    }
+
+    @Override
+    public void exitBag_set_param(LatinParser.Bag_set_paramContext ctx) {
+        System.out.println("new BAG "+((LatinBag)this.structure_curret));
+        this.structure_curret = null;
+        this.alias_bag_current = null;
+    }
+
+
+    @Override
+    public void enterClassDefine(LatinParser.ClassDefineContext ctx) {
+        String name = ctx.ID().getText();
+        String path  = getString(ctx.QUOTEDSTRING().getText());
+        addAlias(name);
+        LatinImportClass importClass = new LatinImportClass(name, path);
+        this.enviromentMap.put(name, importClass);
+    }
+
+    @Override
+    public void exitClassDefine(LatinParser.ClassDefineContext ctx) {
+
+    }
+
+    @Override
+    public void enterInclude_statement(LatinParser.Include_statementContext ctx) {
+    }
+
+    @Override
+    public void exitInclude_statement(LatinParser.Include_statementContext ctx) {
+
+    }
 
     @Override
     public void visitTerminal(TerminalNode terminalNode) {
@@ -501,5 +739,17 @@ public class ConvertListener implements LatinParserListener{
 
     private String getString(String text){
         return text.substring(1, text.length() - 1);
+    }
+
+    private void addAlias(String alias){
+        if( this.all_alias.contains(alias) ) {
+            //TODO: add exception for alias repetida
+            throw new LatinException("error the alias "+alias);
+        }
+        this.all_alias.add(alias);
+    }
+
+    private boolean existAlias(String alias){
+        return this.all_alias.contains(alias);
     }
 }
