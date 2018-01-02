@@ -1,6 +1,7 @@
 package org.qcri.rheem.latin.plan.operator;
 
 import org.qcri.rheem.latin.plan.LatinElement;
+import org.qcri.rheem.latin.plan.addons.structure.LatinStructure;
 import org.qcri.rheem.latin.reflexion.ParametersTypes;
 
 /**
@@ -14,6 +15,7 @@ public abstract class LatinOperator extends LatinElement {
     protected ParametersTypes lambdas        = null;
     protected String          platform       = null;
     protected String          broadcast      = null;
+    protected LatinStructure  structure_info = null;
 
     protected LatinOperator(String name) {
         super(name);
@@ -38,6 +40,11 @@ public abstract class LatinOperator extends LatinElement {
         builder.append("  output: { ");
         builder.append(this.getClassOutput());
         builder.append(" }");
+        if(this.structure_info != null){
+            builder.append(" structure : {");
+            builder.append(this.structure_info.toString());
+            builder.append(" }");
+        }
         return builder.toString();
     }
 
@@ -97,5 +104,13 @@ public abstract class LatinOperator extends LatinElement {
 
     public String getBroadcast() {
         return this.broadcast;
+    }
+
+    public LatinStructure getStructure_info() {
+        return structure_info;
+    }
+
+    public void setStructure_info(LatinStructure structure_info) {
+        this.structure_info = structure_info;
     }
 }

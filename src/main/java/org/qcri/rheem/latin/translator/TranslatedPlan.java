@@ -90,8 +90,6 @@ public class TranslatedPlan extends LatinPlan{
                 LatinOperator prev = this.aliasOperators.get( current.getAliasInput(i) );
                 Operator currentRheem = map.get(prev);
                 Operator nextRheem    = map.get(current);
-
-
                 currentRheem.connectTo(0, nextRheem, i);
             }
 

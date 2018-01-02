@@ -6,6 +6,7 @@ import org.qcri.rheem.latin.plan.LatinElement;
 public abstract class LatinStructure extends LatinElement {
 
 
+
     protected LatinStructure(String name) {
         super(name);
     }

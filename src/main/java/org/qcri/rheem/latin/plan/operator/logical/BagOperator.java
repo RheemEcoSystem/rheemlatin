@@ -1,6 +1,8 @@
 package org.qcri.rheem.latin.plan.operator.logical;
 
+import org.qcri.rheem.basic.data.Tuple2;
 import org.qcri.rheem.core.function.FunctionDescriptor;
+import org.qcri.rheem.latin.UDF.UDFFunction;
 import org.qcri.rheem.latin.plan.operator.LatinExpression;
 import org.qcri.rheem.latin.plan.operator.LatinOperator;
 import org.qcri.rheem.latin.plan.operator.OperatorInput;
@@ -8,91 +10,122 @@ import org.qcri.rheem.latin.translator.expression.BuilderExpression;
 import org.qcri.rheem.latin.translator.expression.Expression;
 import org.qcri.rheem.latin.util.LatinException;
 
-/**
- * Created by bertty on 06-04-17.
- */
-public class ManyOperator extends LatinOperator implements OperatorInput {
-    private LatinExpression[] expressionInput = null;
-    private Class[]           classInput      = null;
-    private String[]          aliasInput      = null;
-    private LatinOperator[]   operatorInput   = null;
-    private int               ninputs         = 0;
+import java.util.function.Function;
 
-    public ManyOperator(String name, int ninputs) {
+public class BagOperator extends LatinOperator implements OperatorInput{
+
+    private LatinExpression   expressionInput = null;
+    private Class             classInput      = null;
+    private String            aliasInput      = null;
+    private LatinOperator     operatorInput   = null;
+    private int               ninputs         = 1;
+
+
+    public BagOperator(String name) {
         super(name);
-        // recuperar configuracion del operador atravez de alguna clase
-        this.ninputs = ninputs;
-        this.expressionInput = new LatinExpression[this.ninputs];
-        this.classInput      = new Class[this.ninputs];
-        this.aliasInput      = new String[this.ninputs];
-        this.operatorInput   = new LatinOperator[this.getNinputs()];
     }
 
-    public LatinExpression[] getExpressionInput() {
-        return expressionInput;
+    //TODO: this mapping that send to the file configuration
+    @Override
+    public String getName(){
+        return "MAP";
     }
 
-    public LatinExpression getExpressionInput(int index){
-        return this.expressionInput[index];
-    }
-
-    public void setExpressionInput(LatinExpression[] expressionInput) {
-        this.expressionInput = expressionInput;
-    }
-
-    public void setExpressionInput(int index, LatinExpression expressionInput){
-        this.expressionInput[index] = expressionInput;
-    }
-
-
+    //TODO: valid de implemetnation of the methods
+    @Override
     public Class[] getClassInput() {
-        return classInput;
+        return new Class[0];
     }
 
+    @Override
     public Class getClassInput(int index) {
-        return classInput[index];
+        if(index != 0){
+            //TODO: EXCEPTION
+            throw new LatinException("error");
+        }
+        return this.classInput;
     }
 
+    @Override
     public void setClassInput(Class[] classInput) {
+
+    }
+
+    @Override
+    public void setClassInput(int index, Class classInput) {
+        if(index != 0){
+            //TODO: EXCEPTION
+            throw new LatinException("error");
+        }
         this.classInput = classInput;
     }
 
-    public void setClassInput(int index, Class classInput) {
-        this.classInput[index] = classInput;
-    }
-
+    @Override
     public String[] getAliasInput() {
-        return aliasInput;
+        return new String[0];
     }
 
+    @Override
     public String getAliasInput(int index) {
-        return aliasInput[index];
+        if(index != 0){
+            //TODO: EXCEPTION
+            throw new LatinException("error");
+        }
+        return this.aliasInput;
     }
 
+    @Override
     public void setAliasInput(String[] aliasInput) {
+
+    }
+
+    @Override
+    public void setAliasInput(int index, String aliasInput) {
+        if(index != 0){
+            //TODO: EXCEPTION
+            throw new LatinException("error");
+        }
         this.aliasInput = aliasInput;
     }
 
-    public void setAliasInput(int index, String aliasInput) {
-        this.aliasInput[index] = aliasInput;
-    }
-
+    @Override
     public int getNinputs() {
-        return ninputs;
+        return 1;
     }
 
-
+    @Override
     public LatinOperator[] getOperatorInput() {
-        return operatorInput;
+        return new LatinOperator[0];
     }
 
+    @Override
     public LatinOperator getOperatorInput(int index) {
-        return operatorInput[index];
+        return null;
     }
 
-
+    @Override
     public void setOperatorInput(int index, LatinOperator operatorInput) {
-        this.operatorInput[index] = operatorInput;
+
+    }
+
+    @Override
+    public boolean isValid() throws Exception {
+        return false;
+    }
+
+    @Override
+    public LatinExpression[] getExpressionInput() {
+        return new LatinExpression[0];
+    }
+
+    @Override
+    public LatinExpression getExpressionInput(int Index) {
+        return null;
+    }
+
+    @Override
+    public void setExpressionInput(int index, LatinExpression expressionInput) {
+
     }
 
     public String toString(){
@@ -113,18 +146,19 @@ public class ManyOperator extends LatinOperator implements OperatorInput {
         return builder.toString();
     }
 
-    public boolean isValid() throws Exception {
-        if (this.classOutput == null) {
-            if (this.ninputs == 1) {
-                this.classOutput = this.getClassInput(0);
-            } else {
-                throw new Exception("Error Class Output invalid for " + this.alias);
-            }
-        }
-        return true;
-    }
-
+    @Override
     public Object[] getParams(String[] params){
+        Object[] obj = super.getParams(params);
+        obj[0] =(UDFFunction) a -> {
+            return new Tuple2<Integer, Integer>(1,2);
+        };
+
+        obj[1] = this.classInput;
+        obj[2] = this.classOutput;
+
+
+        return obj;
+        /*
         Object[] obj = super.getParams(params);
         int class_index = 0;
         int expre_index = 0;
@@ -142,7 +176,7 @@ public class ManyOperator extends LatinOperator implements OperatorInput {
                     }
                     if (params[i].equals("predicate")) {
                         obj[i] = (FunctionDescriptor.SerializablePredicate) fun;
-                    }*/
+                    }
                     obj[i] = fun;
                     continue;
                 }
@@ -169,7 +203,6 @@ public class ManyOperator extends LatinOperator implements OperatorInput {
             }
         }
 
-        return obj;
+        return obj;*/
     }
-
 }

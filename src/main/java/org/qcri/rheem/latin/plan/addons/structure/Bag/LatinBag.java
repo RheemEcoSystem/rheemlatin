@@ -35,6 +35,10 @@ public class LatinBag extends LatinStructure {
         this.alias_input = aliasInput;
     }
 
+    public String getAlias_input() {
+        return alias_input;
+    }
+
     public void openStage(){
         //TODO: se prepara para poder setear todos los elementos juntos para las proximas stages
         tmp_parameters = new ArrayList<>();
@@ -68,7 +72,6 @@ public class LatinBag extends LatinStructure {
                 sb.append("< " + tmp.getKey() + " : " + tmp.getValue() + " >");
             }
         }
-        sb.append("\n");
         return sb.toString();
     }
 }

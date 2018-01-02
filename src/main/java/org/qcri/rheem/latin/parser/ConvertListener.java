@@ -3,6 +3,7 @@ package org.qcri.rheem.latin.parser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.qcri.rheem.core.util.Tuple;
 import org.qcri.rheem.latin.plan.LatinPlan;
 import org.qcri.rheem.latin.plan.addons.enviroment.LatinEnviroment;
 import org.qcri.rheem.latin.plan.addons.enviroment.LatinImportClass;
@@ -10,6 +11,7 @@ import org.qcri.rheem.latin.plan.addons.structure.Bag.LatinBag;
 import org.qcri.rheem.latin.plan.addons.structure.LatinStructure;
 import org.qcri.rheem.latin.plan.operator.*;
 import org.qcri.rheem.latin.plan.operator.expression.*;
+import org.qcri.rheem.latin.plan.operator.logical.BagOperator;
 import org.qcri.rheem.latin.plan.operator.logical.ManyOperator;
 import org.qcri.rheem.latin.plan.operator.logical.SinkOperator;
 import org.qcri.rheem.latin.plan.operator.logical.SourceOperator;
@@ -53,7 +55,7 @@ public class ConvertListener implements LatinParserListener{
 
     private Map<String, LatinStructure> structureMap = null;
 
-    private String alias_bag_current = null;
+    private String alias_structure_current = null;
 
     private LatinStructure structure_curret = null;
 
@@ -142,23 +144,49 @@ public class ConvertListener implements LatinParserListener{
 
     @Override
     public void enterBagStatement(LatinParser.BagStatementContext ctx) {
-
-        if( this.alias_bag_current != null ){
+        if( this.alias_structure_current != null ){
             //TODO: make a good exception description
             throw new LatinException("the alias bag have a problem");
         }
+
+        if(this.operator_actual != null ){
+            //TODO: make a good exception description
+            throw new LatinException("the alias bag have a problem22");
+        }
         String alias = ctx.ID().getText();
        // System.out.println("entrando BAG: "+alias);
-        this.alias_bag_current = alias;
-        addAlias(this.alias_bag_current);
-        this.structure_curret = new LatinBag(this.alias_bag_current);
+        this.alias_structure_current = alias;
+        addAlias(this.alias_structure_current);
+        this.structure_curret = new LatinBag(this.alias_structure_current);
     }
 
     @Override
     public void exitBagStatement(LatinParser.BagStatementContext ctx) {
-        this.structureMap.put(this.alias_bag_current, this.structure_curret);
+        String alias = ctx.ID().getText();
+        if( alias.compareTo(this.alias_structure_current) != 0){
+            //TODO: create a good message for the exception
+            throw new LatinException("existe un problema con las BAG");
+        }
+
+        if(this.operator_actual != null ){
+            //TODO: make a good exception description
+            throw new LatinException("the alias bag have a problem22");
+        }
+
+        this.structureMap.put(this.alias_structure_current, this.structure_curret);
+        //convert the bag in operator
+        BagOperator bagOperator = new BagOperator("BAG");
+        bagOperator.setAlias(this.alias_structure_current);
+        bagOperator.setStructure_info(this.structure_curret);
+
+        bagOperator.setAliasInput(0, ((LatinBag)this.structure_curret).getAlias_input());
+        bagOperator.setClassOutput(Tuple.class);
+
+        this.map_alias.put(this.alias_structure_current, bagOperator);
+        this.operators.add(bagOperator);
+
         this.structure_curret = null;
-        this.alias_bag_current = null;
+        this.alias_structure_current = null;
     }
 
 
@@ -332,6 +360,7 @@ public class ConvertListener implements LatinParserListener{
         this.name_sourceOperator = null;
         this.source_name_var = null;
         this.source_type_var = null;
+        this.operator_actual = null;
     }
 
     @Override
@@ -673,11 +702,11 @@ public class ConvertListener implements LatinParserListener{
 
     @Override
     public void enterBag_set_param(LatinParser.Bag_set_paramContext ctx) {
-        if(this.alias_bag_current != null){
+        if(this.alias_structure_current != null){
             throw new LatinException("The current bag is not null, the parameters is not setting how correspond");
         }
-        this.alias_bag_current = ctx.ID(0).getText();
-        this.structure_curret = this.structureMap.get(this.alias_bag_current);
+        this.alias_structure_current = ctx.ID(0).getText();
+        this.structure_curret = this.structureMap.get(this.alias_structure_current);
      //   System.out.println("ajhaskjhdakjsdjkashdkjashdljashjd");
    //     System.out.println(this.alias_bag_current);
 
@@ -687,9 +716,8 @@ public class ConvertListener implements LatinParserListener{
 
     @Override
     public void exitBag_set_param(LatinParser.Bag_set_paramContext ctx) {
-        System.out.println("new BAG "+((LatinBag)this.structure_curret));
         this.structure_curret = null;
-        this.alias_bag_current = null;
+        this.alias_structure_current = null;
     }
 
 
