@@ -131,7 +131,8 @@ public class ManyOperator extends LatinOperator implements OperatorInput {
         for(int i = 0; i < params.length; i++){
             if( params[i].equals("function") || params[i].equals("predicate") ) {
                 if(this.expressionInput[expre_index].isImplemented()){
-                    Object fun = this.expressionInput[expre_index].getImplementation();
+
+                    Object fun = this.expressionInput[expre_index].getImplementation(this.broadcast);
                     if( fun == null ){
                         //TODO: create a exception with good message
                         throw new LatinException("We have a problem with the implementaion");

@@ -54,18 +54,30 @@ public class TranslatedPlan extends LatinPlan{
     public void convert(){
         this.operatorsRheem = new ArrayList<>();
         this.opSinkRheem    = new ArrayList<>();
+        Map<String, String> broadcast = new HashMap<>();
+        HashMap<String, Operator> map_names = new HashMap<>();
         HashMap<LatinOperator, Operator> map = new HashMap<>();
         for(LatinOperator op: this.operators){
             Operator opRheem = LoaderOperator.reflectOperator(op);
-            if(op.getPlatform() != null)
+            if(op.getPlatform() != null) {
                 opRheem.addTargetPlatform(platforms.get(op.getPlatform()));
+            }
+            if(op.getBroadcast() != null){
+                broadcast.put(op.getAlias(), op.getBroadcast());
+            }
             this.operatorsRheem.add(opRheem);
             map.put(op, opRheem);
+            map_names.put(op.getAlias(), opRheem);
             if(op instanceof SinkOperator){
                 this.opSinkRheem.add((UnarySink) opRheem);
             }
         }
 
+        for(Map.Entry<String, String> link: broadcast.entrySet()){
+            Operator opbroad = map_names.get(link.getValue());
+            Operator opLink  = map_names.get(link.getKey());
+            opbroad.broadcastTo(0, opLink, link.getValue());
+        }
 
         for(LatinOperator op: this.operators){
             if( ! (op instanceof OperatorInput) ){

@@ -1,5 +1,7 @@
 package org.qcri.rheem.latin.plan.operator.expression;
 
+import org.qcri.rheem.latin.UDF.FunctionBroadcast;
+import org.qcri.rheem.latin.UDF.UDFunctionBroadcast;
 import org.qcri.rheem.latin.plan.addons.enviroment.LatinImportClass;
 import org.qcri.rheem.latin.plan.operator.LatinExpression;
 import org.qcri.rheem.latin.util.LatinException;
@@ -27,8 +29,11 @@ public class RealFunctionExpression extends LatinExpression {
     }
 
     //TODO generate the get of the method with reflextion;
-    public Object getImplementation(){
-        return class_reference.getMethod(this.name_method);
+    public Object getImplementation(String broadcast_name){
+        if(broadcast_name == null)
+            return class_reference.getMethod(this.name_method);
+
+        return new UDFunctionBroadcast(broadcast_name, (FunctionBroadcast) class_reference.getMethod(this.name_method));
     }
 
     @Override

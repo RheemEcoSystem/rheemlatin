@@ -51,6 +51,10 @@ public abstract class LatinExpression extends LatinElement {
     }
 
     public Object getImplementation(){
+        return getImplementation(null);
+    }
+
+    public Object getImplementation(String broadcast_name){
         return null;
     }
 

@@ -94,4 +94,8 @@ public abstract class LatinOperator extends LatinElement {
     public void setBroadcast(String alias_broadcast) {
         this.broadcast = alias_broadcast;
     }
+
+    public String getBroadcast() {
+        return this.broadcast;
+    }
 }

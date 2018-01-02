@@ -91,7 +91,6 @@ public class ConvertListener implements LatinParserListener{
                 }
                 if (ele instanceof OperatorInput) {
                     OperatorInput operator = (OperatorInput) ele;
-
                     int length = operator.getNinputs();
 
                     for (int i = 0; i < length; i++) {

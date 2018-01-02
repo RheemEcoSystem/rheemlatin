@@ -6,7 +6,7 @@ file_broad = LOAD 'file:///Users/bertty/latin/broadcast.txt';
 
 broad = MAP file_broad -> myclass.getConvert();
 
-map_op_broad = MAP file -> myclass.getBroadcast() WITH BROADCAST broad;
+map_op = MAP file -> myclass.getBroadcast() WITH BROADCAST broad;
 
 STORE map_op 'file:///Users/bertty/latin/result.txt';
 
