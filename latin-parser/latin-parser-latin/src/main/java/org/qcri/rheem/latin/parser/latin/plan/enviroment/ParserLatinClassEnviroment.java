@@ -44,7 +44,6 @@ public class ParserLatinClassEnviroment extends ClassEnviroment {
     @Override
     public Object getMethod(String method_name){
         return null;
-        //return IMPORTS.getLambda(this.name, method_name);
     }
 
     @Override

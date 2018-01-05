@@ -162,12 +162,5 @@ public class BagOperator extends LatinOperator implements OperatorInput, Operato
 
     @Override
     public void changeTypes() {
-        //TODO es el mismo caso que para ManyOperator
-        for(int j = 0; j < this.getSizeInput(); j++){
-            if(this.getExpressionInput(j) instanceof RealFunctionExpression){
-                RealFunctionExpression real_func = (RealFunctionExpression)this.getExpressionInput(j);
-                this.setTypeOutput(0, real_func.getType_return());
-            }
-        }
     }
 }

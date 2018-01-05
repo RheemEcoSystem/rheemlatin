@@ -69,6 +69,14 @@
         "class",
         "class"
       ]
+    },{
+      "name_latin": "BAG",
+      "name_rheem": "MapOperator",
+      "parameters": [
+        "function",
+        "class",
+        "class"
+      ]
     }
   ]
 }

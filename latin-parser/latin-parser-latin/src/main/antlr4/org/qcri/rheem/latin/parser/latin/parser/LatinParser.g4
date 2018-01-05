@@ -26,7 +26,6 @@ import java.util.*;
     }
 
     public static Integer getNextPrecedence(Token op) {
-        System.out.println(op.getType()+"  ");
         Integer p = getPrecedence(op);
         if (op.getType() == PREOP)              return p;
         else if (op.getType() == BINOP)         return p+1;

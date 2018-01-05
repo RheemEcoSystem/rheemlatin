@@ -43,6 +43,14 @@ public class ParserImportClass extends ClassLoader{
         }
     }
 
+    public boolean loadClass(String alias, Class clazz){
+        if(imports.containsKey(alias)){
+            return true;
+        }
+        imports.put(alias, clazz);
+        return true;
+    }
+
     private Class _loadClass(String name, URI path) throws ClassNotFoundException {
         try {
             URL myUrl = new URL(path.toString());
@@ -108,12 +116,13 @@ public class ParserImportClass extends ClassLoader{
         );
     }
 
-    public Object getLambda(String class_name, String method_name){
+    public Object getLambda(String class_name, String method_name, Object[] parameters){
         Method method = getMethod(class_name, method_name);
         try {
-            return method.invoke(null);
+            return method.invoke(null, parameters);
         } catch (IllegalAccessException |InvocationTargetException e) {
             throw new LatinException(e);
         }
     }
+
 }

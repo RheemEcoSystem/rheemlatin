@@ -7,7 +7,8 @@ public enum OperatorType {
     BINARY_TO_UNARY("BinaryToUnary"),
     UNARY_TO_UNARY("UnaryToUnary"),
     SINK("Sink"),
-    SOURCE("Source");
+    SOURCE("Source"),
+    WRAPPER("Wrapper");
 
 
     private String text;

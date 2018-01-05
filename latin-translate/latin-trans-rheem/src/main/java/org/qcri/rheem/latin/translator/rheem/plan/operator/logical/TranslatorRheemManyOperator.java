@@ -35,8 +35,8 @@ public class TranslatorRheemManyOperator extends TranslatorRheemOperator {
 
                 if(this.inputs.getExpression(expre_index).isImplemented()){
                     RealFunctionExpression expre = (RealFunctionExpression) this.inputs.getExpression(expre_index);
-
-                    Object fun = TranslatorRheemOperator.getLambda(expre.getClass_reference().getName(), expre.getName_method());
+                    Object[] parameters = expre.getParameters_method();
+                    Object fun = TranslatorRheemOperator.getLambda(expre.getClass_reference().getName(), expre.getName_method(), parameters);
 
                     if( fun == null ){
                         //TODO: create a exception with good message

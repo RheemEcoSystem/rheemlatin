@@ -20,6 +20,7 @@ public class RealFunctionExpression extends LatinExpression{
 
     private Class type_return;
 
+    private Object[] parameters_method;
 
 
     public RealFunctionExpression(String name) {
@@ -36,6 +37,14 @@ public class RealFunctionExpression extends LatinExpression{
         this.class_reference = class_reference;
         validate(class_reference, name_method);
         this.name_method = name_method;
+    }
+
+    public  RealFunctionExpression(String name, ClassEnviroment class_reference, String name_method, Object[] parameters_method ){
+        this(name);
+        this.class_reference = class_reference;
+        validate(class_reference, name_method);
+        this.name_method = name_method;
+        this.parameters_method = parameters_method;
     }
 
     //TODO generate the get of the method with reflextion MOVER AL TRANSLATOR;
@@ -147,5 +156,9 @@ public class RealFunctionExpression extends LatinExpression{
 
     public Class getType_return() {
         return type_return;
+    }
+
+    public Object[] getParameters_method(){
+        return this.parameters_method;
     }
 }

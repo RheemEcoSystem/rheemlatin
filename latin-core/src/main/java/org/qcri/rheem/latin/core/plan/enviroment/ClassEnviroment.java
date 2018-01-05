@@ -13,6 +13,7 @@ public class ClassEnviroment extends LatinEnviroment{
     protected URI path;
     protected String[] methods;
 
+
     static ParserImportClass IMPORTS;
     static {
         IMPORTS = (ParserImportClass) LatinContext.getConfiguration("imports");
@@ -36,6 +37,12 @@ public class ClassEnviroment extends LatinEnviroment{
         this.path = path;
         this.path_str = this.path.getPath();
         validate();
+        importMethods();
+    }
+
+    public ClassEnviroment(String name, Class clazz){
+        this(name);
+        IMPORTS.loadClass(name, clazz);
         importMethods();
     }
 
@@ -82,7 +89,7 @@ public class ClassEnviroment extends LatinEnviroment{
     }
 
     public Object getMethod(String method_name){
-        return IMPORTS.getLambda(this.name, method_name);
+        return IMPORTS.getLambda(this.name, method_name, null);
     }
 
     public Method getRealMethod(String method_name){

@@ -3,7 +3,6 @@ package org.qcri.rheem.latin.parser.latin.parser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.qcri.rheem.core.util.Tuple;
 import org.qcri.rheem.latin.core.plan.LatinPlan;
 import org.qcri.rheem.latin.core.plan.enviroment.ClassEnviroment;
 import org.qcri.rheem.latin.core.plan.enviroment.LatinEnviroment;
@@ -17,6 +16,7 @@ import org.qcri.rheem.latin.core.plan.operator.logical.SinkOperator;
 import org.qcri.rheem.latin.core.plan.operator.logical.SourceOperator;
 import org.qcri.rheem.latin.core.plan.structure.BagStructure;
 import org.qcri.rheem.latin.core.plan.structure.LatinStructure;
+import org.qcri.rheem.latin.core.plan.structure.bag.RecordBag;
 import org.qcri.rheem.latin.parser.latin.context.LoadMockupClass;
 import org.qcri.rheem.latin.parser.latin.context.ParserLatinContext;
 import org.qcri.rheem.latin.parser.latin.exception.ParserLatinException;
@@ -112,7 +112,6 @@ public class ConvertListener implements LatinParserListener
                         }
                         op_current.setTypeInput(i, ((OperatorOutput)op_next).getTypeOutput(i));
                     }
-                    //TODO ver si sirve de algo
                     ele.changeTypes();
                     continue;
                 }
@@ -192,7 +191,10 @@ public class ConvertListener implements LatinParserListener
         bagOperator.setStructure_info(this.structure_curret);
 
         bagOperator.setAliasInput(0, ((BagStructure)this.structure_curret).getAlias_input());
-        bagOperator.setTypeOutput(0, Tuple.class);
+        bagOperator.setTypeOutput(0, RecordBag.class);
+
+
+        bagOperator.setExpressionInput(0,((BagStructure)this.structure_curret).getExpressionParser());
 
         this.map_alias.put(this.alias_structure_current, bagOperator);
         this.operators.add(bagOperator);
@@ -654,7 +656,6 @@ public class ConvertListener implements LatinParserListener
 
     @Override
     public void exitBag_header(LatinParser.Bag_headerContext ctx) {
-
     }
 
     @Override
@@ -701,7 +702,12 @@ public class ConvertListener implements LatinParserListener
 
     @Override
     public void enterBag_header_params(LatinParser.Bag_header_paramsContext ctx) {
+        if(this.structure_curret == null){
+            //TODO: Write a exception that explain more the problem
+            throw new ParserLatinException("is not posible assign the parametres");
+        }
 
+        ((BagStructure)this.structure_curret).setRegex(getString(ctx.constant().QUOTEDSTRING().getText()));
     }
 
     @Override

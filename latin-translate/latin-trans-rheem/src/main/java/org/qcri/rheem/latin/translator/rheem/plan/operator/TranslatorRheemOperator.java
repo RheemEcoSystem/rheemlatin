@@ -68,8 +68,8 @@ public abstract class TranslatorRheemOperator extends LatinOperator {
     }
 
 
-    public static Object getLambda(String name, String method_name){
-        return IMPORTS.getLambda(name, method_name);
+    public static Object getLambda(String name, String method_name, Object[] parameter){
+        return IMPORTS.getLambda(name, method_name, parameter);
     }
 
     public static Object getImplementation(Object method, String broadcast){
