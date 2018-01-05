@@ -1,7 +1,7 @@
 IMPORT 'file:///Users/bertty/Qatar/external/target/classes/org/qcri/external/MyImport.class' AS myclass;
 
 
-/*file = LOAD 'file:///Users/bertty/latin/number.txt';
+file = LOAD 'file:///Users/bertty/latin/number.txt';
 file_broad = LOAD 'file:///Users/bertty/latin/broadcast.txt';
 
 broad = MAP file_broad -> myclass.getConvert();
@@ -10,22 +10,23 @@ map_op = MAP file -> myclass.getBroadcast() WITH BROADCAST broad;
 
 STORE map_op 'file:///Users/bertty/latin/result.txt';
 
-*
+/*
 
-file = LOAD 'file:///Users/bertty/latin/number.txt'
+file = LOAD 'file:///Users/bertty/la_tin/number.txt'
 
 map_op = MAP file -> myclass.getBroadcast() ;
-STORE map_op 'file:///Users/bertty/latin/result.txt';
-*/
+STORE map_op 'file:///Users/bertty/la_tin/result.txt';
+
 bag1_file = LOAD 'file:///Users/bertty/latin/bag1.txt';
-//bag2_file = LOAD 'file:///Users/bertty/latin/bag2.txt';
+bag2_file = LOAD 'file:///Users/bertty/latin/bag2.txt';
 //bag3_file = LOAD 'file:///Users/bertty/latin/bag3.txt';
 
-
+map2 = MAP bag2_file WITH PLATFORM 'spark';
 
 mybag1 = BAG() <- bag1_file;
 
 STORE mybag1 'file:///Users/bertty/latin/result.txt';
+STORE map2 'lala';
 
 /*
 mybag1 = BAG () <- file;
