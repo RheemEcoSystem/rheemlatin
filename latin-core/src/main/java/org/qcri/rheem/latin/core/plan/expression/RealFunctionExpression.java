@@ -1,6 +1,6 @@
 package org.qcri.rheem.latin.core.plan.expression;
 
-import org.qcri.rheem.latin.core.Exception.LatinCoreException;
+import org.qcri.rheem.latin.core.exception.LatinCoreException;
 import org.qcri.rheem.latin.core.plan.LatinElement;
 import org.qcri.rheem.latin.core.plan.enviroment.ClassEnviroment;
 
@@ -102,47 +102,70 @@ public class RealFunctionExpression extends LatinExpression{
 
         Type type = method.getGenericReturnType();
 
-        Class returnClass = method.getReturnType();
 
-        if(type.getClass() == Class.class){
+        Class<?> returnClass = method.getReturnType();
+
+        ParameterizedType parameterizedType;
+        int position = -1;
+        if (type.getClass() == Class.class) {
             this.type_return = returnClass;
             return;
         }
 
-        if(! (type instanceof ParameterizedType) ){
+        if (!(type instanceof ParameterizedType)) {
             throw new LatinCoreException(
-                String.format(
-                    "the return of your method %s is not posible that process",
-                    method_name
-                )
+                    String.format(
+                            "the return of your method %s is not posible that process",
+                            method_name
+                    )
             );
         }
-        ParameterizedType parameterizedType = (ParameterizedType) type;
+        parameterizedType = (ParameterizedType) type;
 
-        int position = -1;
-        if( Function.class.isAssignableFrom( returnClass ) ){
+        if (Function.class.isAssignableFrom(returnClass)) {
             position = 1;
-        }else if( Predicate.class.isAssignableFrom(returnClass ) ){
+        } else if (Predicate.class.isAssignableFrom(returnClass)) {
             position = 0;
-        }else if( BiFunction.class.isAssignableFrom(returnClass ) ){
+        } else if (BiFunction.class.isAssignableFrom(returnClass)) {
             position = 2;
-        }else if( Consumer.class.isAssignableFrom( returnClass) ){
+        } else if (Consumer.class.isAssignableFrom(returnClass)) {
             position = 0;
-        }else if( FunctionBroadcast.class.isAssignableFrom(returnClass)){
+        } else if (FunctionBroadcast.class.isAssignableFrom(returnClass)) {
             position = 1;
+        } else if (Iterable.class.isAssignableFrom(returnClass)){
+            position = 0;
         }
 
-        if(position == -1){
+        if (position == -1) {
             throw new LatinCoreException(
-                String.format(
-                    "the return of your method %s is not posible that process, becouse is not lambda expression",
-                    method_name
-                )
+                    String.format(
+                            "the return of your method %s is not posible that process, becouse is not lambda expression",
+                            method_name
+                    )
             );
         }
 
+        try {
+            this.type_return = (Class) parameterizedType.getActualTypeArguments()[position];
+        }catch(ClassCastException e) {
+            if (parameterizedType.getActualTypeArguments()[position] instanceof ParameterizedType) {
+                type = parameterizedType.getActualTypeArguments()[position];
+                try {
+                    returnClass = Class.forName(((ParameterizedType) type).getRawType().getTypeName());
+                    if (Iterable.class.isAssignableFrom(returnClass)) {
+                        position = 0;
+                    }
+                    this.type_return = (Class) ((ParameterizedType) type).getActualTypeArguments()[position];
 
-        this.type_return = (Class) parameterizedType.getActualTypeArguments()[position];
+                    return;
+
+
+                } catch (ClassNotFoundException ex) {
+                    throw new LatinCoreException(ex);
+                }
+            }
+
+        }
 
     }
 

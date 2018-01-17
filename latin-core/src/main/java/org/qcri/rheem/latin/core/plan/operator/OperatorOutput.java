@@ -22,6 +22,10 @@ public interface OperatorOutput {
 
     LatinExpression[] getExpressionsOutput();
 
+    String[] getExpressionsAliasOutput();
+
+    String getExpressionAliasOutput(int index);
+
     void setTypeOutput(int index, Class clazz);
 
     void setOperatorOutput(int index, LatinOperator operator);
@@ -29,6 +33,8 @@ public interface OperatorOutput {
     void setAliasOutput(int index, String alias);
 
     void setExpressionOutput(int index, LatinExpression expression);
+
+    void setExpressionAliasOutput(int index, String alias_expression);
 
     int getSizeOutput();
 }

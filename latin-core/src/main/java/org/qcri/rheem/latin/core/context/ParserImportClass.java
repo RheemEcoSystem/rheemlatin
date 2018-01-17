@@ -1,6 +1,6 @@
 package org.qcri.rheem.latin.core.context;
 
-import org.qcri.rheem.latin.core.Exception.LatinException;
+import org.qcri.rheem.latin.core.exception.LatinCoreException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class ParserImportClass extends ClassLoader{
             imports.put(alias, clazz);
             return true;
         }catch (ClassNotFoundException e){
-            throw new LatinException(e);
+            throw new LatinCoreException(e);
         }finally {
             return false;
         }
@@ -102,7 +102,7 @@ public class ParserImportClass extends ClassLoader{
     private Class valid(String alias){
         if(! imports.containsKey(alias)){
             //TODO create a great message for this exception;
-            throw new LatinException("get Method is imposible that execute");
+            throw new LatinCoreException("get Method is imposible that execute");
         }
         return imports.get(alias);
     }
@@ -118,10 +118,16 @@ public class ParserImportClass extends ClassLoader{
 
     public Object getLambda(String class_name, String method_name, Object[] parameters){
         Method method = getMethod(class_name, method_name);
+        System.out.println("method "+method+" "+parameters);
+
         try {
+            if(parameters == null){
+                return method.invoke(null);
+            }
             return method.invoke(null, parameters);
         } catch (IllegalAccessException |InvocationTargetException e) {
-            throw new LatinException(e);
+            System.err.println(e.getCause());
+            throw new LatinCoreException(e);
         }
     }
 

@@ -13,11 +13,6 @@ public class TranslatorTemplateOperator extends LatinOperator{
     }
 
     @Override
-    public boolean isValid() {
-        return false;
-    }
-
-    @Override
     protected void selfCopy(LatinElement element) {
 
     }

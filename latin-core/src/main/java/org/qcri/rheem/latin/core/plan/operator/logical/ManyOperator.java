@@ -22,6 +22,36 @@ public class ManyOperator extends LatinOperator implements OperatorInput, Operat
     }
 
     @Override
+    public String[] getExpressionsAliasInput() {
+        return this.inputs.getExpressions_alias();
+    }
+
+    @Override
+    public String getExpressionAliasInput(int index) {
+        return this.inputs.getExpression_alias(index);
+    }
+
+    @Override
+    public void setExpressionAliasInput(int index, String alias_expression) {
+        this.inputs.setExpression_alias(index, alias_expression);
+    }
+
+    @Override
+    public String[] getExpressionsAliasOutput() {
+        return this.outputs.getExpressions_alias();
+    }
+
+    @Override
+    public String getExpressionAliasOutput(int index) {
+        return this.outputs.getExpression_alias(index);
+    }
+
+    @Override
+    public void setExpressionAliasOutput(int index, String alias_expression){
+        this.outputs.setExpression_alias(index, alias_expression);
+    }
+
+    @Override
     public Class getTypeInput(int index) {
         return this.inputs.getType(index);
     }
@@ -167,14 +197,26 @@ public class ManyOperator extends LatinOperator implements OperatorInput, Operat
             if (this.ninputs == 1) {
                 this.classOutput = this.getClassInput(0);
             } else {
-                throw new Exception("Error Class Output invalid for " + this.alias);
+                throw new exception("Error Class Output invalid for " + this.alias);
             }
         }*/
-
         for(int j = 0; j < this.getSizeInput(); j++){
+            Class type_return;
             if(this.getExpressionInput(j) instanceof RealFunctionExpression){
                 RealFunctionExpression real_func = (RealFunctionExpression)this.getExpressionInput(j);
-                this.setTypeOutput(0, real_func.getType_return());
+                type_return = real_func.getType_return();
+            }else{
+                type_return = this.getTypeInput(j);
+            }
+        //TODO hacer que este caso sea parametrico, cuando el return es un iterable pero lo que importa es el contenido
+        //TODO como pasa en el caso del flatmap
+            if(this.getTypeOutput(0) != null){
+                if(this.getName().compareToIgnoreCase("FLATMAP") == 0){
+                    this.setTypeOutput(0, type_return);
+                }
+            }
+            if(this.getTypeOutput(0) == null ) {
+                this.setTypeOutput(0, type_return);
             }
         }
     }

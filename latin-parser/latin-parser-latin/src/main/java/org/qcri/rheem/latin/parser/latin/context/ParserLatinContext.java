@@ -82,6 +82,11 @@ public class ParserLatinContext extends LatinContext {
                 LatinLexer.addFunction(trans_final.getName());
             }
 
+            for(MappingTransform trans: mapping.getWrapper_mapping()){
+                MappingFinal trans_final = trans.transform();
+                LOADER.addWrapperMapping(trans_final.getName(), trans_final);
+                LatinLexer.addOperator(trans_final.getName());
+            }
         } catch (IOException e) {
             throw new ParserLatinException(e);
         }

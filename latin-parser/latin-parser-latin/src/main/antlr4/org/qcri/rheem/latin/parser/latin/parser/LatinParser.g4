@@ -87,7 +87,15 @@ source_statement :
 ;
 
 as_clause :
-        AS type_load? PLEFT pair PRIGHT /*( explicit_field_def | (PLEFT field_def_list* PRIGHT)) */
+        AS type_load? PLEFT pair PRIGHT delimiter? key?/*( explicit_field_def | (PLEFT field_def_list* PRIGHT)) */
+;
+
+delimiter :
+        DELIMITER QUOTEDSTRING
+;
+
+key :
+    KEY PLEFT (QUOTEDSTRING (COMA QUOTEDSTRING)*) PRIGHT
 ;
 
 type_load :

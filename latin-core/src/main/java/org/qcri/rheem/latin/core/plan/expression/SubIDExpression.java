@@ -48,4 +48,14 @@ public class SubIDExpression extends LatinExpression{
     public int countChildren() {
         return 1;
     }
+
+
+    //TODO: crear de forma generica para todas las opciones disponibles
+    public String getReference(){
+        return value.split("\\.")[0];
+    }
+
+    public String getComponente(){
+        return value.split("\\.")[1];
+    }
 }

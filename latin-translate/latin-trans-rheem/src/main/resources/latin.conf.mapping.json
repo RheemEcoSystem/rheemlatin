@@ -10,7 +10,7 @@
           "class"
       ]
     },{
-      "name_latin": "JOIN",
+      "name_latin": "INNER_JOIN",
       "name_rheem": "JoinOperator",
       "parameters": [
           "function",
@@ -62,7 +62,7 @@
         "class"
       ]
     },{
-      "name_latin": "FLAPMAP",
+      "name_latin": "FLATMAP",
       "name_rheem": "FlatMapOperator",
       "parameters": [
         "function",
@@ -75,6 +75,32 @@
       "parameters": [
         "function",
         "class",
+        "class"
+      ]
+    },{
+      "name_latin": "GROUP_BY",
+      "name_rheem": "GroupByOperator",
+      "parameters": [
+        "function",
+        "class",
+        "class"
+      ]
+    },{
+      "name_latin": "SORT",
+      "name_rheem": "SortOperator",
+      "parameters": [
+        "class"
+      ]
+    },{
+      "name_latin": "ZIP_INDEX",
+      "name_rheem": "ZipWithIdOperator",
+      "parameters": [
+        "class"
+      ]
+    },{
+      "name_latin": "UNION",
+      "name_rheem": "UnionAllOperator",
+      "parameters": [
         "class"
       ]
     }

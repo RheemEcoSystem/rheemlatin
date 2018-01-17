@@ -204,7 +204,6 @@ import java.util.*;
             return OperatorType.POSTFIX;
         }
         return OperatorType.PREFIX;*/
-
         switch(map.get(operator)){
             case 1:
                 return OperatorType.BINARY;
@@ -272,7 +271,7 @@ AS        :   'AS';//|'as';
 COLON     :   ':';
 COMA      :   ',';
 SEMI_COLON:   ';';
-ID        :   ('a'..'z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'-')*;
+ID        :   ('a'..'z') ('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'-')*;
 ASSING    :   '=';
 ARROW     :   '->';
 ARROW_I   :   '<-';
@@ -297,19 +296,23 @@ INCLUDE   :   'INCLUDE';//|'include'; //import a script of the rheemLatin inside
 //deberia ser algo al estilo ID = INCLUDE 'path' ID*;
 BROADCAST :   'BROADCAST';//|'broadcast';
 PLATFORM  :   'PLATFORM';//|'platform';
+DELIMITER :   'DELIMITER';
+KEY       :   'KEY';
 
 
 
 
+QUOTEDSTRING :  '\'' .*?  '\''
 
-QUOTEDSTRING :  '\'' (   ( ~ ( '\'' | '\\' | '\n' | '\r' ) )
+
+/*(   ( ~ ( '\'' | '\\' | '\n' | '\r' ) )
                        | ( '\\' ( ( 'N' | 'T' | 'B' | 'R' | 'F' | '\\' | '\'' ) ) )
                        | ( '\\U' ( '0'..'9' | 'A'..'F' )
                                  ( '0'..'9' | 'A'..'F' )
                                  ( '0'..'9' | 'A'..'F' )
                                  ( '0'..'9' | 'A'..'F' )  )
-                     )*
-                '\''
+                     )* */
+
 ;
 
 MULTILINE_QUOTEDSTRING :  '\'' (   ( ~ ( '\'' | '\\' ) )
@@ -337,7 +340,7 @@ LINE_COMMENT : '//' ~[\r\n]* -> skip;
 WS        :   [ \t\r\n]+ -> skip ; // skip spaces, tabs, newlines
 
 SYMBOL
-    :  .
+    :  . | '_'
 ;
 
 

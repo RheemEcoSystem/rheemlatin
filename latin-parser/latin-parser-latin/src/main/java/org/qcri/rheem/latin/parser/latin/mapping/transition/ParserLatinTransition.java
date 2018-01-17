@@ -11,6 +11,7 @@ public class ParserLatinTransition {
     private List<ExpressionTransition> expression_mapping;
     private List<FunctionTransition> function_mapping;
     private List<OperatorTransition> operator_mapping;
+    private List<WrapperTransition>  wrapper_mapping;
 
     public List<ExpressionTransition> getExpression_mapping() {
         return expression_mapping;
@@ -34,5 +35,13 @@ public class ParserLatinTransition {
 
     public void setOperator_mapping(List<OperatorTransition> operator_mapping) {
         this.operator_mapping = operator_mapping;
+    }
+
+    public List<WrapperTransition> getWrapper_mapping() {
+        return wrapper_mapping;
+    }
+
+    public void setWrapper_mapping(List<WrapperTransition> wrapper_mapping) {
+        this.wrapper_mapping = wrapper_mapping;
     }
 }

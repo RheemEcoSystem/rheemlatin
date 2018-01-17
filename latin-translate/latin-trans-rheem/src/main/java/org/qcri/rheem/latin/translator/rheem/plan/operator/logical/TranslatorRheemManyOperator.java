@@ -1,7 +1,6 @@
 package org.qcri.rheem.latin.translator.rheem.plan.operator.logical;
 
 import org.qcri.rheem.core.function.FunctionDescriptor;
-import org.qcri.rheem.latin.core.Exception.LatinException;
 import org.qcri.rheem.latin.core.plan.LatinElement;
 import org.qcri.rheem.latin.core.plan.expression.RealFunctionExpression;
 import org.qcri.rheem.latin.translator.rheem.exception.TranslatorRheemException;
@@ -13,6 +12,7 @@ import org.qcri.rheem.latin.udf.broadcast.FunctionBroadcast;
 import org.qcri.rheem.latin.udf.broadcast.UDFunctionBroadcast;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public class TranslatorRheemManyOperator extends TranslatorRheemOperator {
 
@@ -30,9 +30,9 @@ public class TranslatorRheemManyOperator extends TranslatorRheemOperator {
         Object[] obj = super.getParams();
         int class_index = 0;
         int expre_index = 0;
+        Class type_return = this.outputs.getType(0);;
         for(int i = 0; i < this.params.length; i++){
             if( params[i] == ParameterType.FUNCTION || params[i] == ParameterType.PREDICATE) {
-
                 if(this.inputs.getExpression(expre_index).isImplemented()){
                     RealFunctionExpression expre = (RealFunctionExpression) this.inputs.getExpression(expre_index);
                     Object[] parameters = expre.getParameters_method();
@@ -40,10 +40,13 @@ public class TranslatorRheemManyOperator extends TranslatorRheemOperator {
 
                     if( fun == null ){
                         //TODO: create a exception with good message
-                        throw new TranslatorRheemException("We have a problem with the implementation");
+                        throw new TranslatorRheemException("We have a problem with the implementation "+expre.getName_method()+"  "+expre.getClass_reference().getName());
                     }
-                    //TODO: crear la funcion para mas parametricas para soportar mas de un broadcast
+                    if(expre.getType_return() != type_return){
+                        type_return = expre.getType_return();
+                    }
 
+                    //TODO: crear la funcion para mas parametricas para soportar mas de un broadcast
                     if(this.broadcast_name.size() > 0){
                         if(fun instanceof FunctionBroadcast && this.broadcast_name.size() == 1){
                             fun = new UDFunctionBroadcast(this.broadcast_name.get(0), (FunctionBroadcast) fun);
@@ -54,6 +57,7 @@ public class TranslatorRheemManyOperator extends TranslatorRheemOperator {
                     }
 
                     obj[i] = fun;
+                    expre_index++;
                     continue;
                 }
 
@@ -74,7 +78,7 @@ public class TranslatorRheemManyOperator extends TranslatorRheemOperator {
                     obj[i] = this.inputs.getType(class_index);
                     class_index++;
                 }else{
-                    obj[i] = this.outputs.getType(0);
+                    obj[i] = type_return;
                 }
             }
         }

@@ -23,6 +23,10 @@ public interface OperatorInput {
 
     LatinExpression[] getExpressionsInput();
 
+    String[] getExpressionsAliasInput();
+
+    String getExpressionAliasInput(int index);
+
     void setTypeInput(int index, Class clazz);
 
     void setOperatorInput(int index, LatinOperator operator);
@@ -30,6 +34,8 @@ public interface OperatorInput {
     void setAliasInput(int index, String alias);
 
     void setExpressionInput(int index, LatinExpression expression);
+
+    void setExpressionAliasInput(int index, String alias_expression);
 
     int getSizeInput();
 }

@@ -52,4 +52,17 @@ public class FunctionMapping implements MappingFinal {
     public Class[] getParameters() {
         return parameters;
     }
+
+    @Override
+    public Object clone() {
+        return new FunctionMapping(
+            this.name,
+            this.type,
+            this.type_return,
+            this.class_name,
+            this.method,
+            this.nparam,
+            this.parameters
+        );
+    }
 }

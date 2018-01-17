@@ -1,4 +1,4 @@
-package org.qcri.rheem.latin.optimizer.plan.operator;
+package org.qcri.rheem.latin.optimizer.template.plan.operator;
 
 import org.qcri.rheem.latin.core.plan.LatinElement;
 import org.qcri.rheem.latin.core.plan.operator.LatinOperator;
@@ -12,10 +12,6 @@ public class OptimizerTemplateOperator extends LatinOperator{
         super(element);
     }
 
-    @Override
-    public boolean isValid() {
-        return false;
-    }
 
     @Override
     protected void selfCopy(LatinElement element) {

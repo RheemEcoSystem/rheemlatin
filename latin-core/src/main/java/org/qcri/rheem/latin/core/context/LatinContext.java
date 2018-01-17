@@ -1,6 +1,6 @@
 package org.qcri.rheem.latin.core.context;
 
-import org.qcri.rheem.latin.core.Exception.LatinCoreException;
+import org.qcri.rheem.latin.core.exception.LatinCoreException;
 
 import java.net.URI;
 import java.util.HashMap;

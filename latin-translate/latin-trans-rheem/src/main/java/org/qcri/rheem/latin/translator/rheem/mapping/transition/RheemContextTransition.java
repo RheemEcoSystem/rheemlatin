@@ -13,7 +13,7 @@ public class RheemContextTransition {
     private String package_rheem;
     private String extend_rheem;
     private List<RheemClassTransition> class_reflex;
-    private Map<String, RheemClassTransition> map_reflex;
+    private Map<String, List<RheemClassTransition>> map_reflex;
     private List<RheemClassTransition> other_package;
 
     public String getPackage_rheem() {
@@ -41,7 +41,13 @@ public class RheemContextTransition {
         this.map_reflex = new HashMap<>();
         this.other_package = new ArrayList<>();
         for(RheemClassTransition _tmp: this.class_reflex){
-            this.map_reflex.put(_tmp.getName_rheem(), _tmp);
+            List<RheemClassTransition> list_value = this.map_reflex.get(_tmp.getName_rheem());
+            if( list_value == null ){
+                list_value = new ArrayList();
+                this.map_reflex.put(_tmp.getName_rheem(), list_value);
+            }
+            list_value.add(_tmp);
+
             if(_tmp.getPackage_name() != null){
                 this.other_package.add(_tmp);
             }
@@ -54,8 +60,8 @@ public class RheemContextTransition {
 
             Map<RheemClassTransition, Class> class_process = getPackageClass();
 
-            Set<Map.Entry<RheemClassTransition, Class>> la = class_process.entrySet();
             for (Map.Entry<RheemClassTransition, Class> reg : class_process.entrySet()) {
+
                 RheemClassTransition class_info = reg.getKey();
                 Class class_obj = reg.getValue();
 
@@ -92,12 +98,10 @@ public class RheemContextTransition {
 
             for(Class clazz: obj_extends){
                 if(this.map_reflex.containsKey(clazz.getSimpleName())){
-                    map.put(
-                        this.map_reflex.get(
-                            clazz.getSimpleName()
-                        ),
-                        clazz
-                    );
+                    List<RheemClassTransition> values =  this.map_reflex.get(clazz.getSimpleName());
+                    for(RheemClassTransition value: values){
+                        map.put( value, clazz );
+                    }
                 }
             }
 

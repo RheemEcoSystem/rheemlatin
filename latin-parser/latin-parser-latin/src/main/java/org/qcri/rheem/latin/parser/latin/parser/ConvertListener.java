@@ -10,10 +10,7 @@ import org.qcri.rheem.latin.core.plan.expression.*;
 import org.qcri.rheem.latin.core.plan.operator.LatinOperator;
 import org.qcri.rheem.latin.core.plan.operator.OperatorInput;
 import org.qcri.rheem.latin.core.plan.operator.OperatorOutput;
-import org.qcri.rheem.latin.core.plan.operator.logical.BagOperator;
-import org.qcri.rheem.latin.core.plan.operator.logical.ManyOperator;
-import org.qcri.rheem.latin.core.plan.operator.logical.SinkOperator;
-import org.qcri.rheem.latin.core.plan.operator.logical.SourceOperator;
+import org.qcri.rheem.latin.core.plan.operator.logical.*;
 import org.qcri.rheem.latin.core.plan.structure.BagStructure;
 import org.qcri.rheem.latin.core.plan.structure.LatinStructure;
 import org.qcri.rheem.latin.core.plan.structure.bag.RecordBag;
@@ -21,7 +18,7 @@ import org.qcri.rheem.latin.parser.latin.context.LoadMockupClass;
 import org.qcri.rheem.latin.parser.latin.context.ParserLatinContext;
 import org.qcri.rheem.latin.parser.latin.exception.ParserLatinException;
 import org.qcri.rheem.latin.parser.latin.plan.ParserLatinPlan;
-import sun.tools.jstat.Operator;
+
 
 import java.util.*;
 
@@ -34,10 +31,14 @@ public class ConvertListener implements LatinParserListener
     private Collection<String> all_alias = null;
 
     private List<LatinOperator> operators    = null;
+    private List<LatinOperator> operators_wrapper    = null;
 
     private Stack<ConstantExpression> constants = null;
 
     private Map<String, LatinOperator> map_alias = null;
+    private Map<String, LatinOperator> map_alias_wrapper = null;
+
+    private Map<String, String> map_getAlias = null;
 
     private LatinOperator operator_actual = null;
 
@@ -68,18 +69,21 @@ public class ConvertListener implements LatinParserListener
     private LoadMockupClass operator_builder = null;
 
     public ConvertListener(){
-        this.plan        = new ParserLatinPlan();
-        this.expressions = new Stack<LatinExpression>();
-        this.operators   = new ArrayList<LatinOperator>();
-        this.constants   = new Stack<ConstantExpression>();
-        this.map_alias   = new HashMap<String, LatinOperator>();
-        this.input_alias      = new LinkedList<String>();
-        this.sinkOperators   = new ArrayList<SinkOperator>();
-        this.sourceOperators = new ArrayList<SourceOperator>();
-        this.all_alias     = new ArrayList<String>();
-        this.enviromentMap = new HashMap<String, LatinEnviroment>();
-        this.structureMap  = new HashMap<String, LatinStructure>();
-        this.operator_builder = ParserLatinContext.getLoaderClass();
+        this.plan              = new ParserLatinPlan();
+        this.expressions       = new Stack<LatinExpression>();
+        this.operators         = new ArrayList<LatinOperator>();
+        this.operators_wrapper = new ArrayList<LatinOperator>();
+        this.constants         = new Stack<ConstantExpression>();
+        this.map_alias         = new HashMap<String, LatinOperator>();
+        this.map_alias_wrapper = new HashMap<String, LatinOperator>();
+        this.map_getAlias      = new HashMap<String, String>();
+        this.input_alias       = new LinkedList<String>();
+        this.sinkOperators     = new ArrayList<SinkOperator>();
+        this.sourceOperators   = new ArrayList<SourceOperator>();
+        this.all_alias         = new ArrayList<String>();
+        this.enviromentMap     = new HashMap<String, LatinEnviroment>();
+        this.structureMap      = new HashMap<String, LatinStructure>();
+        this.operator_builder  = ParserLatinContext.getLoaderClass();
     }
 
     public LatinPlan getPlan(){
@@ -96,6 +100,7 @@ public class ConvertListener implements LatinParserListener
         try {
             for (LatinOperator ele : this.operators) {
                 if (ele instanceof SourceOperator) {
+
                     continue;
                 }
                 if (ele instanceof OperatorInput) {
@@ -103,19 +108,186 @@ public class ConvertListener implements LatinParserListener
                     int length = op_current.getSizeInput();
 
                     for (int i = 0; i < length; i++) {
-                        LatinOperator op_next = this.map_alias.get(op_current.getAliasInput(i));
-                        op_current.setOperatorInput(i, op_next);
+
+                        String key = this.map_getAlias.get(op_current.getAliasInput(i));
+                        key = (key == null || key.compareTo( ele.getAlias()) == 0)? op_current.getAliasInput(i): key;
+
+                        if(key != op_current.getAliasInput(i)){
+                            op_current.setAliasInput(i, key);
+                        }
+
+                        LatinOperator op_next = this.map_alias.get(key);
+
                         if( !(op_next instanceof OperatorOutput) ){
                             throw new ParserLatinException(
-                                String.format("the Operator (%s) not have outputs", op_next)
+                                    String.format("the Operator (%s) not have outputs", op_next)
                             );
                         }
-                        op_current.setTypeInput(i, ((OperatorOutput)op_next).getTypeOutput(i));
+
+                        if(op_next instanceof WrapperOperator){
+                            //TODO: hacerlo generico para los casos en que es mas de uno
+                            op_current.setAliasInput(i, ((WrapperOperator)op_next).getAlias_output().get(0));
+                            op_next = this.map_alias_wrapper.get(op_current.getAliasInput(i));
+                        }
+
+                        if(op_next == null){
+                            //TODO: hacer un mensaje mas descriptivo
+                            throw new ParserLatinException(
+                                    String.format("the Operator (%s) not existe the", op_current)
+                            );
+                        }
+
+                        op_current.setOperatorInput(i, op_next);
+                        //TODO: ver como hacer que sea parametrico para el caso de los outputs
+                        ((OperatorOutput)op_next).setOperatorOutput(0, ele);
+                        ((OperatorOutput)op_next).setAliasOutput(0, ele.getAlias());
+
+                        op_current.setTypeInput(i, ((OperatorOutput)op_next).getTypeOutput(0));
                     }
                     ele.changeTypes();
+                    //TODO: hacer parametrico
+                    if(ele instanceof OperatorOutput){
+                        OperatorInput input = (OperatorInput) ((OperatorOutput) ele).getOperatorOutput(0);
+                        if(input != null) {
+                            for (int i = 0; i < input.getSizeInput(); i++) {
+                                if (input.getOperatorInput(i) == ele) {
+                                    input.setTypeInput(i, ((OperatorOutput) ele).getTypeOutput(0));
+                                }
+                            }
+                        }
+                    }
                     continue;
                 }
             }
+            ArrayList<LatinOperator> rm_operators= new ArrayList<>();
+
+            for(LatinOperator ele: this.operators_wrapper){
+                if( ! ele.isWrapped() ){
+                    throw new ParserLatinException(
+                            String.format("the Operator (%s) is wrapped for othre operator", ele)
+                    );
+                }
+
+                WrapperOperator myWrapper = (WrapperOperator) ele.getWrapper();
+                this.map_alias.put(ele.getAlias(), ele);
+                if (ele instanceof SourceOperator) {
+                    continue;
+                }
+                if (ele instanceof OperatorInput){
+                    OperatorInput op_current = (OperatorInput) ele;
+
+                    //set function udf
+                    String[] expressions_alias = op_current.getExpressionsAliasInput();
+                    String[] expressions_MyWrapper = myWrapper.getExpressionsAliasInput();
+
+                    int length = expressions_alias.length;
+                    for(int i = 0; i < length; i++){
+                        for(int j = 0; j < expressions_MyWrapper.length; j++){
+                            if (expressions_MyWrapper[j] == null){
+                                continue;
+                            }
+                            if(expressions_MyWrapper[j].compareTo(expressions_alias[i]) == 0 ){
+                                op_current.setExpressionInput(i, myWrapper.getExpressionInput(j));
+                            }
+                        }
+                    }
+
+                    //set function statics
+                    for(int i = 0; i < length; i++){
+                        if( op_current.getExpressionInput(i) != null){
+                            continue;
+                        }
+                        LatinExpression expre = myWrapper.getExpressionMap(op_current.getExpressionAliasInput(i));
+                     /*   if(expre == null){
+                            //TODO mensaje mas descriptivo
+                            throw new ParserLatinException(
+                                    String.format("No existe funcion para el operador")
+                            );
+                        }*/
+                        op_current.setExpressionInput(i, expre);
+                    }
+
+                    //set operators
+                    length = op_current.getSizeInput();
+                    for (int i = 0; i < length; i++) {
+                        String current_alias_input =  op_current.getAliasInput(i);
+                        LatinOperator op_next = this.map_alias_wrapper.get(current_alias_input);
+
+                        if(op_next == null){
+                            op_next = this.map_alias.get(myWrapper.getAliasInputReal(current_alias_input));
+                        }
+
+                        op_current.setOperatorInput(i, op_next);
+                        op_current.setAliasInput(i, op_next.getAlias());
+                        if( !(op_next instanceof OperatorOutput) ){
+                            throw new ParserLatinException(
+                                    String.format("the Operator (%s) not have outputs", op_next)
+                            );
+                        }
+                        ((OperatorOutput)op_next).setOperatorOutput(0, ele);
+                        ((OperatorOutput)op_next).setAliasOutput(0, ele.getAlias());
+                        //TODO: ver como hacer que sea parametrico para el caso de los outputs
+                        op_current.setTypeInput(i, ((OperatorOutput)op_next).getTypeOutput(0));
+                    }
+
+                }
+                ele.changeTypes();
+                //TODO: hacer parametrico
+                if(ele instanceof OperatorOutput){
+
+                    String output_alias = ((OperatorOutput) ele).getAliasOutput(0);
+                    if(output_alias != null) {
+                        OperatorInput op_prev = (OperatorInput) this.map_alias_wrapper.get(output_alias);
+                        if (op_prev == null) {
+                            op_prev = (OperatorInput) this.map_alias.get(output_alias);
+                        }
+
+
+                        for (int i = 0; i < op_prev.getSizeInput(); i++) {
+                            if (op_prev.getAliasInput(i).compareTo(ele.getAlias()) == 0) {
+                                op_prev.setTypeInput(i, ((OperatorOutput) ele).getTypeOutput(0));
+                            }
+                        }
+                    }
+                }
+
+                if( ! rm_operators.contains(myWrapper)){
+                    rm_operators.add(myWrapper);
+                }
+            }
+
+            this.operators.removeAll(rm_operators);
+            this.operators.addAll(this.operators_wrapper);
+
+            for(LatinOperator operator: this.operators){
+                if(operator instanceof OperatorInput){
+                    OperatorInput op = (OperatorInput) operator;
+                    for(int i = 0; i < op.getSizeInput(); i++){
+                        if(op.getTypeInput(i) == null){
+                            OperatorOutput previuos = (OperatorOutput) this.map_alias.get(op.getAliasInput(i));
+                            //TODO hacerlo para que sea generico
+                            if(previuos.getTypeOutput(0) == null){
+                                ((LatinOperator)previuos).changeTypes();
+                                op.setTypeInput(0, previuos.getTypeOutput(0));
+                            }
+
+                            //TODO hacerlo para que sea generico
+                            if(previuos.getTypeOutput(0) == null){
+                                throw new ParserLatinException(
+                                        String.format("Not exist class for conexion beetween %s and %s", operator, previuos)
+                                );
+                            }
+
+                            op.setTypeInput(i, previuos.getTypeOutput(0));
+                        }
+                    }
+                }
+            }
+
+            //TODO eliminar tambien del map para que sea consistente  y agregar los nuevos elementos
+
+
+
             ArrayList<String> list_alias = new ArrayList<>();
             for (String name_alias : this.map_alias.keySet()) {
                 list_alias.add(name_alias);
@@ -130,7 +302,7 @@ public class ConvertListener implements LatinParserListener
             //TODO: agregar el ambiente y los estructureas
         }catch (Exception ex){
             ex.printStackTrace();
-            System.exit(-105);
+            System.exit(-1);
         }
     }
 
@@ -194,7 +366,7 @@ public class ConvertListener implements LatinParserListener
         bagOperator.setTypeOutput(0, RecordBag.class);
 
 
-        bagOperator.setExpressionInput(0,((BagStructure)this.structure_curret).getExpressionParser());
+        bagOperator.setExpressionInput(0,((BagStructure)this.structure_curret).getExpressionSplit());
 
         this.map_alias.put(this.alias_structure_current, bagOperator);
         this.operators.add(bagOperator);
@@ -207,9 +379,20 @@ public class ConvertListener implements LatinParserListener
     @Override
     public void enterOperatorStatement(LatinParser.OperatorStatementContext ctx) {
         ManyOperator operator = this.operator_builder.getOperatorMany(ctx.OPERATOR_NAME().getText());
-        this.map_alias.put(this.alias_actual, operator);
         operator.setAlias(this.alias_actual);
+
+        this.map_alias.put(this.alias_actual, operator);
         this.operators.add(operator);
+
+        if(operator instanceof WrapperOperator){
+            Map<String, LatinOperator> operators = ((WrapperOperator)operator).getWrapped();
+            for(Map.Entry<String, LatinOperator> op: operators.entrySet()){
+                this.map_alias_wrapper.put(op.getKey(), op.getValue());
+                this.operators_wrapper.add(op.getValue());;
+                this.addAlias(op.getKey());
+            }
+        }
+
         this.operator_actual = operator;
     }
 
@@ -225,26 +408,40 @@ public class ConvertListener implements LatinParserListener
 
         if(this.input_alias.size() != ((ManyOperator)this.operator_actual).getSizeInput()){
             //TODO: GENERARA EXCEPTION para esta situacion
-            //throw new Exception("the quantity alias is diferent");
+            //throw new exception("the quantity alias is diferent");
             this.input_alias.clear();
             return;
         }
-
         int i = 0;
         ManyOperator tmp = (ManyOperator)this.operator_actual;
         for(String name: this.input_alias){
             tmp.setAliasInput(i++, name);
         }
+
         if(tmp.getSizeInput() != 0 && this.expressions.size() <= tmp.getSizeInput()) {
             int count = (this.expressions.size() < tmp.getSizeInput())? this.expressions.size(): tmp.getSizeInput();
 
             while(--count >= 0){
-                tmp.setExpressionInput(count, this.expressions.pop());
+                LatinExpression expression_tmp = this.expressions.pop();
+                if(expression_tmp instanceof SubIDExpression){
+                    SubIDExpression subIDexpre = (SubIDExpression) expression_tmp;
+                    String key = subIDexpre.getReference();
+
+                    LatinStructure structure = this.structureMap.get(key);
+                    if(structure == null){
+                        structure = new BagStructure("tmp");
+                    }
+                    if(structure != null && (structure instanceof BagStructure) ) {
+                        expression_tmp = ((BagStructure)structure).getExpressionKey(subIDexpre.getComponente());
+                    }
+                }
+                tmp.setExpressionInput(count, expression_tmp);
             }
         }else if(this.expressions.size() > tmp.getSizeInput()){
-            //throw new RecognitionException("error");
+            //TODO: colocar mensaje significativo
+            throw new ParserLatinException("error");
         }
-        // this.expressions = null;
+
 
         this.input_alias.clear();
 
@@ -271,14 +468,15 @@ public class ConvertListener implements LatinParserListener
 
         String _alias  = class_name+"#"+method_name;
 
-        if( ! this.expressions.empty() ){
+      /*  if( ! this.expressions.empty() ){
             //TODO: create a good description
+            System.out.println(_alias);
             throw new ParserLatinException("error with the function");
-        }
+        }*/
 
         if( !this.enviromentMap.containsKey(class_name)){
             //TODO: create a good description
-            throw new ParserLatinException("la clase no es clase");
+            throw new ParserLatinException("la clase no es clase "+class_name);
         }
 
         ClassEnviroment clazz = (ClassEnviroment) this.enviromentMap.get(class_name);
@@ -368,21 +566,88 @@ public class ConvertListener implements LatinParserListener
         this.map_alias.put(this.alias_actual, operator);
         operator.setAlias(this.alias_actual);
 
+        if(this.structure_curret != null){
+            operator.setOperatorOutput(0, this.map_alias.get(this.structure_curret.getName()+"_op"));
+            operator.setAliasOutput(0, this.structure_curret.getName()+"_op");
+            this.map_getAlias.put(this.alias_actual, this.structure_curret.getName()+"_op");
+        }
+
+
         this.name_sourceOperator = null;
         this.source_name_var = null;
         this.source_type_var = null;
         this.operator_actual = null;
+        this.structure_curret = null;
     }
 
     @Override
     public void enterAs_clause(LatinParser.As_clauseContext ctx) {
         this.source_name_var = new ArrayList<>();
         this.source_type_var = new ArrayList<>();
+        if(ctx.type_load() == null){
 
+            if(this.structure_curret != null){
+                //TODO agregar un mensaje mas descriptivo
+                throw new ParserLatinException("Error");
+            }
+
+            this.structure_curret = new BagStructure(this.alias_actual +"_BAG");
+
+
+        }
     }
 
     @Override
     public void exitAs_clause(LatinParser.As_clauseContext ctx) {
+        if(ctx.type_load() == null){
+
+            BagOperator bagOperator = new BagOperator("BAG", 1, 1);
+
+            this.addAlias(this.alias_actual +"_BAG_op");
+            bagOperator.setAlias(this.alias_actual +"_BAG_op");
+            bagOperator.setStructure_info(this.structure_curret);
+
+            bagOperator.setAliasInput(0, ((BagStructure)this.structure_curret).getAlias_input());
+            bagOperator.setTypeOutput(0, RecordBag.class);
+
+            bagOperator.setAliasInput(0, this.alias_actual);
+            bagOperator.setExpressionInput(0,((BagStructure)this.structure_curret).getExpressionSplit());
+
+            this.map_alias.put(bagOperator.getAlias(), bagOperator);
+
+            this.operators.add(bagOperator);
+        }
+    }
+
+    @Override
+    public void enterDelimiter(LatinParser.DelimiterContext ctx) {
+
+    }
+
+    @Override
+    public void exitDelimiter(LatinParser.DelimiterContext ctx) {
+        if(this.structure_curret != null && ctx.DELIMITER() != null){
+            ((BagStructure)this.structure_curret).setRegex(getString( ctx.QUOTEDSTRING().getText() ));
+        }
+    }
+
+    @Override
+    public void enterKey(LatinParser.KeyContext ctx) {
+        if(this.structure_curret != null && ctx.KEY() != null){
+            List<TerminalNode> primitive = ctx.QUOTEDSTRING();
+            List<String> keys = new ArrayList<>(primitive.size());
+
+            for(TerminalNode node: primitive){
+                keys.add(getString(node.getText()));
+            }
+
+
+            ((BagStructure)this.structure_curret).setKeys(keys);
+        }
+    }
+
+    @Override
+    public void exitKey(LatinParser.KeyContext ctx) {
 
     }
 
@@ -419,7 +684,15 @@ public class ConvertListener implements LatinParserListener
 
     @Override
     public void exitPair(LatinParser.PairContext ctx) {
-
+        if(this.operator_actual instanceof SourceOperator){
+            if(this.structure_curret instanceof BagStructure){
+                ((BagStructure)this.structure_curret).openStage();
+                for(String value: this.source_name_var){
+                    ((BagStructure)this.structure_curret).addHeader(value, "STRING");
+                }
+                ((BagStructure)this.structure_curret).closeStage();
+            }
+        }
     }
 
     @Override
@@ -540,7 +813,7 @@ public class ConvertListener implements LatinParserListener
         if( ctx.ID() != null ){
             this.expressions.push(
                     new SubIDExpression(
-                            "subID_"+ctx.getText(),
+                            "subID##"+ctx.getText(),
                             ctx.ID().getText()
                     )
             );
@@ -549,7 +822,7 @@ public class ConvertListener implements LatinParserListener
         if( ctx.NUMBER() != null ){
             this.expressions.push(
                     new ConstantExpression<Double>(
-                            "number_"+ctx.NUMBER().getText(),
+                            "number##"+ctx.NUMBER().getText(),
                             Double.parseDouble( ctx.NUMBER().getText() )
                     )
             );
@@ -558,7 +831,7 @@ public class ConvertListener implements LatinParserListener
         if( ctx.QUOTEDSTRING() != null ){
             this.expressions.push(
                     new ConstantExpression<String>(
-                            "string_"+ctx.QUOTEDSTRING().getText(),
+                            "string##"+ctx.QUOTEDSTRING().getText(),
                             getString( ctx.QUOTEDSTRING().getText() )
                     )
             );
@@ -696,7 +969,7 @@ public class ConvertListener implements LatinParserListener
             //TODO: Write a exception that explain more the problem
             throw new ParserLatinException("is not posible assign the parametres");
         }
-        ((BagStructure)this.structure_curret).addHeader(ctx.QUOTEDSTRING().toString(), this.type_current);
+        ((BagStructure)this.structure_curret).addHeader(getString(ctx.QUOTEDSTRING().toString()), this.type_current);
         this.type_current = null;
     }
 
@@ -708,11 +981,12 @@ public class ConvertListener implements LatinParserListener
         }
 
         ((BagStructure)this.structure_curret).setRegex(getString(ctx.constant().QUOTEDSTRING().getText()));
+
     }
 
     @Override
     public void exitBag_header_params(LatinParser.Bag_header_paramsContext ctx) {
-
+        this.expressions.pop();
     }
 
     @Override
@@ -776,7 +1050,11 @@ public class ConvertListener implements LatinParserListener
     }
 
     private String getString(String text){
-        return text.substring(1, text.length() - 1);
+        text = text.substring(1, text.length() - 1);
+        if(text.compareToIgnoreCase("\\\\t")== 0){
+            return "\t";
+        }
+        return text;
     }
 
     private void addAlias(String alias){

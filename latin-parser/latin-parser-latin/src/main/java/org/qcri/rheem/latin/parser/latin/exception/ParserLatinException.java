@@ -1,6 +1,6 @@
 package org.qcri.rheem.latin.parser.latin.exception;
 
-import org.qcri.rheem.latin.core.Exception.LatinException;
+import org.qcri.rheem.latin.core.exception.LatinException;
 
 public class ParserLatinException extends LatinException {
     public ParserLatinException(String message) {

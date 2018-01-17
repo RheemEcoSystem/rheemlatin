@@ -36,7 +36,7 @@ public abstract class LatinExpression extends LatinElement{
 
     @Override
     public String toString(){
-        return "Expression: >"+ this.name +"<\n";
+        return "Expression: >"+ this.name +"< "+this.hashCode();
     }
 
     public abstract boolean hasChildren();

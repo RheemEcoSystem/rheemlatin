@@ -1,6 +1,6 @@
 package org.qcri.rheem.latin.core.plan.operator;
 
-import org.qcri.rheem.latin.core.Exception.LatinCoreException;
+import org.qcri.rheem.latin.core.exception.LatinCoreException;
 import org.qcri.rheem.latin.core.plan.LatinElement;
 import org.qcri.rheem.latin.core.plan.expression.LatinExpression;
 import org.qcri.rheem.latin.core.plan.structure.LatinStructure;
@@ -18,6 +18,7 @@ public abstract class LatinOperator extends LatinElement{
     protected LatinStructure structure_info;
     protected LatinComponents inputs;
     protected LatinComponents outputs;
+    protected LatinOperator wrapper;
 
 
     {
@@ -142,6 +143,14 @@ public abstract class LatinOperator extends LatinElement{
         return outputs;
     }
 
+    public LatinOperator getWrapper() {
+        return wrapper;
+    }
+
+    public void setWrapper(LatinOperator wrapper) {
+        this.wrapper = wrapper;
+    }
+
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();
@@ -180,5 +189,9 @@ public abstract class LatinOperator extends LatinElement{
     }
 
     public void changeTypes(){}
+
+    public boolean isWrapped(){
+        return this.wrapper != null;
+    }
 
 }

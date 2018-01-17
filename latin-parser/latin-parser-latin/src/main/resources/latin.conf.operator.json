@@ -6,7 +6,7 @@
       "type": "UnaryToUnary",
       "lambda": "predicate"
     },{
-      "name": "JOIN",
+      "name": "INNER_JOIN",
       "nfunction": "2",
       "type": "BinaryToUnary",
       "output": "org.qcri.rheem.basic.data.Tuple2",
@@ -50,9 +50,121 @@
     },{
       "name": "FLATMAP",
       "nfunction": "1",
+      "type": "UnaryToUnary",
+      "lambda": "function",
+      "output": "java.lang.Iterable"
+    },{
+      "name": "GROUP_BY",
+      "nfunction": "1",
+      "type": "UnaryToUnary",
+      "output": "java.lang.Iterable"
+    },{
+      "name": "SORT",
+      "nfunction": "1",
       "type": "UnaryToUnary"
+    },{
+      "name": "ZIP_INDEX",
+      "nfunction": "1",
+      "type": "UnaryToUnary",
+      "output": "org.qcri.rheem.basic.data.Tuple2"
+    },{
+      "name": "UNION",
+      "nfunction": "2",
+      "type": "BinaryToUnary"
     }
-
+  ],
+  "wrapper_mapping" : [
+    {
+      "name": "JOIN",
+      "nfunction": 2,
+      "type": "Wrapper",
+      "functions" : [
+        {
+          "function_name": "getkey0",
+          "lambda": "function",
+          "udf": true,
+          "position" : 0
+        },
+        {
+          "function_name": "getkey1",
+          "lambda": "function",
+          "udf": true,
+          "position": 1
+        },
+        {
+          "function_name": "convert_map",
+          "lambda": "function",
+          "class_name": "org.qcri.rheem.latin.core.plan.structure.bag.MethodBag",
+          "method_name": "mergeRecord",
+          "udf": false
+        }
+      ],
+      "alias_inputs": ["joinKey0", "joinKey1"],
+      "alias_outputs": ["joinrecord_map_%s"],
+      "operadores" :[
+        {
+          "operator_name": "INNER_JOIN",
+          "operator_alias": "joinrecord_join_%s",
+          "inputs_alias" : ["joinKey0", "joinKey1"],
+          "functions_alias": ["getkey0", "getkey1"]
+        },{
+          "operator_name": "MAP",
+          "operator_alias": "joinrecord_map_%s",
+          "inputs_alias" : ["joinrecord_join_%s"],
+          "functions_alias": ["convert_map"]
+        }
+      ]
+    },{
+      "name": "TRANSPOSE",
+      "nfunction": 1,
+      "type": "Wrapper",
+      "functions" : [
+        {
+          "function_name": "transpose_flatmap",
+          "lambda": "function",
+          "class_name": "org.qcri.rheem.latin.core.plan.structure.bag.MethodBag",
+          "method_name": "transpose_flatColumns",
+          "udf": false
+        },{
+          "function_name": "transpose_getKeyGroup",
+          "lambda": "function",
+          "class_name": "org.qcri.rheem.latin.core.plan.structure.bag.MethodBag",
+          "method_name": "transpose_getKeyGroup",
+          "udf": false
+        },{
+          "function_name": "transpose_getTranspose",
+          "lambda": "function",
+          "class_name": "org.qcri.rheem.latin.core.plan.structure.bag.MethodBag",
+          "method_name": "transpose_getTranspose",
+          "udf": false
+        }
+      ],
+      "alias_inputs": ["matrix"],
+      "alias_outputs": ["transpose_map_%s"],
+      "operadores" :[
+        {
+          "operator_name": "ZIP_INDEX",
+          "operator_alias": "transpose_zipindex_%s",
+          "inputs_alias" : ["matrix"],
+          "functions_alias": []
+        },{
+          "operator_name": "FLATMAP",
+          "operator_alias": "transpose_flatmap_%s",
+          "inputs_alias" : ["transpose_zipindex_%s"],
+          "functions_alias": ["transpose_flatmap"]
+        },{
+          "operator_name": "GROUP_BY",
+          "operator_alias": "transpose_group_by_%s",
+          "inputs_alias" : ["transpose_flatmap_%s"],
+          "functions_alias": ["transpose_getKeyGroup"]
+        },{
+          "operator_name": "MAP",
+          "operator_alias": "transpose_map_%s",
+          "inputs_alias" : ["transpose_group_by_%s"],
+          "functions_alias": ["transpose_getTranspose"]
+        }
+      ]
+    }
   ],
   "expression_mapping": [
     {

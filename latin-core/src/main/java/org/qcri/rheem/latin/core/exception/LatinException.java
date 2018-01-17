@@ -1,4 +1,4 @@
-package org.qcri.rheem.latin.core.Exception;
+package org.qcri.rheem.latin.core.exception;
 
 public class LatinException extends RuntimeException{
 

@@ -1,6 +1,6 @@
 package org.qcri.rheem.latin.executor;
 
-import org.qcri.rheem.latin.core.Exception.LatinException;
+import org.qcri.rheem.latin.core.exception.LatinException;
 import org.qcri.rheem.latin.core.engine.LatinEngine;
 import org.qcri.rheem.latin.core.executor.LatinExecutor;
 import org.qcri.rheem.latin.core.handler.LatinHandler;

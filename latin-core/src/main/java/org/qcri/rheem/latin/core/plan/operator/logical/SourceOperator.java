@@ -1,6 +1,6 @@
 package org.qcri.rheem.latin.core.plan.operator.logical;
 
-import org.qcri.rheem.latin.core.Exception.LatinCoreException;
+import org.qcri.rheem.latin.core.exception.LatinCoreException;
 import org.qcri.rheem.latin.core.plan.LatinElement;
 import org.qcri.rheem.latin.core.plan.expression.LatinExpression;
 import org.qcri.rheem.latin.core.plan.operator.LatinComponents;
@@ -29,6 +29,21 @@ public class SourceOperator extends LatinOperator implements OperatorOutput {
     @Override
     protected void selfCopy(LatinElement element) {
 
+    }
+
+    @Override
+    public String[] getExpressionsAliasOutput() {
+        return this.outputs.getExpressions_alias();
+    }
+
+    @Override
+    public String getExpressionAliasOutput(int index) {
+        return this.outputs.getExpression_alias(index);
+    }
+
+    @Override
+    public void setExpressionAliasOutput(int index, String alias_expression) {
+        this.outputs.setExpression_alias(index, alias_expression);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package org.qcri.rheem.latin.core.plan.operator;
 
-import org.qcri.rheem.latin.core.Exception.LatinCoreException;
+import org.qcri.rheem.latin.core.exception.LatinCoreException;
 import org.qcri.rheem.latin.core.plan.expression.LatinExpression;
 
 import java.util.Arrays;
@@ -12,6 +12,7 @@ public class LatinComponents {
     private String[] alias;
     private LatinOperator[] connections;
     private LatinExpression[] expressions;
+    private String[] expression_alias;
 
     public LatinComponents(int size){
         this.size = size;
@@ -19,6 +20,7 @@ public class LatinComponents {
         this.alias = new String[this.size];
         this.connections = new LatinOperator[this.size];
         this.expressions = new LatinExpression[this.size];
+        this.expression_alias = new String[this.size];
     }
 
 
@@ -64,6 +66,15 @@ public class LatinComponents {
         return this.expressions;
     }
 
+    public String[] getExpressions_alias() {
+        return expression_alias;
+    }
+
+    public String getExpression_alias(int index){
+        validIndex(index);
+        return this.expression_alias[index];
+    }
+
     public void setType(int index, Class clazz){
         validIndex(index);
         this.types[index] = clazz;
@@ -82,6 +93,11 @@ public class LatinComponents {
     public void setExpression(int index, LatinExpression expression){
         validIndex(index);
         this.expressions[index] = expression;
+    }
+
+    public void setExpression_alias(int index, String expression_alias) {
+        validIndex(index);
+        this.expression_alias[index] = expression_alias;
     }
 
     public int getSize(){
@@ -111,9 +127,13 @@ public class LatinComponents {
 
     @Override
     public String toString() {
-        return "(size="+this.size+")[" +
+        return "LatinComponents{" +
+                "size=" + size +
+                ", types=" + Arrays.toString(types) +
                 ", alias=" + Arrays.toString(alias) +
-                ", class=" + Arrays.toString(this.types) +
-                "\" ]";
+                ", expressions=" + Arrays.toString(expressions) +
+                ", expression_alias=" + Arrays.toString(expression_alias) +
+                ", conexion: "+ Arrays.toString(Arrays.stream(this.connections).map(a -> (a ==null)?"":a.getAlias()).toArray()) +
+                '}';
     }
 }

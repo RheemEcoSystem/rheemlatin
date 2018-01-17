@@ -21,6 +21,36 @@ public class BagOperator extends LatinOperator implements OperatorInput, Operato
     }
 
     @Override
+    public String[] getExpressionsAliasInput() {
+        return this.inputs.getExpressions_alias();
+    }
+
+    @Override
+    public String getExpressionAliasInput(int index) {
+        return this.inputs.getExpression_alias(index);
+    }
+
+    @Override
+    public void setExpressionAliasInput(int index, String alias_expression) {
+        this.inputs.setExpression_alias(index, alias_expression);
+    }
+
+    @Override
+    public String[] getExpressionsAliasOutput() {
+        return this.outputs.getExpressions_alias();
+    }
+
+    @Override
+    public String getExpressionAliasOutput(int index) {
+        return this.outputs.getExpression_alias(index);
+    }
+
+    @Override
+    public void setExpressionAliasOutput(int index, String alias_expression) {
+        this.outputs.setExpression_alias(index, alias_expression);
+    }
+
+    @Override
     public Class getTypeInput(int index) {
         return this.inputs.getType(index);
     }

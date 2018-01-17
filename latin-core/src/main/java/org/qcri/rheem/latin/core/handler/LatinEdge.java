@@ -1,6 +1,6 @@
 package org.qcri.rheem.latin.core.handler;
 
-import org.qcri.rheem.latin.core.Exception.LatinCoreException;
+import org.qcri.rheem.latin.core.exception.LatinCoreException;
 import org.qcri.rheem.latin.core.engine.LatinEngine;
 
 import java.util.ArrayList;

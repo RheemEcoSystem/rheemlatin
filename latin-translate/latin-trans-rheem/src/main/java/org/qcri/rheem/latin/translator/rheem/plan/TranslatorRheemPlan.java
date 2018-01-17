@@ -53,8 +53,8 @@ public class TranslatorRheemPlan extends LatinPlan implements LatinExecutable {
     public LatinPlan generateContext(){
         this.rheemContext = new RheemContext();
         this.rheemContext.with(Java.basicPlugin());
-        this.rheemContext.with(Postgres.plugin());
-        this.rheemContext.with(Spark.basicPlugin());
+        //this.rheemContext.with(Postgres.plugin());
+        //this.rheemContext.with(Spark.basicPlugin());
         return this;
     }
 
@@ -126,7 +126,7 @@ public class TranslatorRheemPlan extends LatinPlan implements LatinExecutable {
     private void loadPlatform(){
         platforms = new HashMap<>();
         platforms.put("java", Java.platform());
-        platforms.put("spark", Spark.platform());
+        //platforms.put("spark", Spark.platform());
     }
 
 }

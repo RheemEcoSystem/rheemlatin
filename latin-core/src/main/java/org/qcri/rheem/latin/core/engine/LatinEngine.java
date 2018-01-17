@@ -1,7 +1,7 @@
 package org.qcri.rheem.latin.core.engine;
 
 
-import org.qcri.rheem.latin.core.Exception.LatinException;
+import org.qcri.rheem.latin.core.exception.LatinException;
 import org.qcri.rheem.latin.core.context.LatinContext;
 import org.qcri.rheem.latin.core.plan.LatinPlan;
 

@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.qcri.rheem.latin.core.Exception.LatinException;
+import org.qcri.rheem.latin.core.exception.LatinException;
 import org.qcri.rheem.latin.core.engine.LatinEngine;
 import org.qcri.rheem.latin.core.plan.LatinPlan;
 import org.qcri.rheem.latin.parser.latin.context.ParserLatinContext;
@@ -46,6 +46,7 @@ public class ParserLatinEngine extends LatinEngine {
                 walker.walk(listener, ast);
 
                 LatinPlan plan_output = listener.getPlan();
+                plan_output.print();
                 return plan_output;
             } catch (IOException e) {
                 e.printStackTrace();

@@ -1,6 +1,6 @@
 package org.qcri.rheem.latin.translator.rheem.exception;
 
-import org.qcri.rheem.latin.core.Exception.LatinException;
+import org.qcri.rheem.latin.core.exception.LatinException;
 
 public class TranslatorRheemException extends LatinException {
 

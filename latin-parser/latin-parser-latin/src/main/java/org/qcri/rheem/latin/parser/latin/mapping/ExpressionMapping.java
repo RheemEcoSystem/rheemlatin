@@ -31,4 +31,14 @@ public class ExpressionMapping implements MappingFinal {
     public ExpressionTypeClass getType_class() {
         return type_class;
     }
+
+    @Override
+    public Object clone() {
+        return new ExpressionMapping(
+            this.name,
+            this.type,
+            this.real_operator,
+            this.type_class
+        );
+    }
 }

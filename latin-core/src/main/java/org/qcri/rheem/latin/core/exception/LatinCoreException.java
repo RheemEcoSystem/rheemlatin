@@ -1,4 +1,4 @@
-package org.qcri.rheem.latin.core.Exception;
+package org.qcri.rheem.latin.core.exception;
 
 public class LatinCoreException extends LatinException {
     public LatinCoreException(String s) {

@@ -1,6 +1,6 @@
 package org.qcri.rheem.latin.core.plan.operator.logical;
 
-import org.qcri.rheem.latin.core.Exception.LatinCoreException;
+import org.qcri.rheem.latin.core.exception.LatinCoreException;
 import org.qcri.rheem.latin.core.plan.LatinElement;
 import org.qcri.rheem.latin.core.plan.expression.LatinExpression;
 import org.qcri.rheem.latin.core.plan.operator.LatinComponents;
@@ -24,6 +24,21 @@ public class SinkOperator extends LatinOperator implements OperatorInput {
     @Override
     protected void selfCopy(LatinElement element) {
 
+    }
+
+    @Override
+    public String[] getExpressionsAliasInput() {
+        return this.inputs.getExpressions_alias();
+    }
+
+    @Override
+    public String getExpressionAliasInput(int index) {
+        return this.inputs.getExpression_alias(index);
+    }
+
+    @Override
+    public void setExpressionAliasInput(int index, String alias_expression) {
+        this.inputs.setExpression_alias(index, alias_expression);
     }
 
     @Override
