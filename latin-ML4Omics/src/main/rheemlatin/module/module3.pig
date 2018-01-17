@@ -1,8 +1,8 @@
-IMPORT 'file:///' AS module;
+IMPORT 'file:///ml4omics/udf/Module3.class' AS module;
 
-gene_list = LOAD 'file:///output1_1.csv';
+gene_list = LOAD 'file:///ml4omics/module1/output1_1.csv';
 
-gdscCnv = LOAD 'file:///Gene_level_CN.csv';
+gdscCnv = LOAD 'file:///ml4omics/module3/Gene_level_CN.csv';
 
 
 gdscCnv_gene_w_null = MAP  gdscCnv -> module.getGeneName() WITH BROADCAST gene_list;
@@ -17,6 +17,6 @@ gdscCnv_t = TRANSPOSE gdscCnv_map;
 gdscCnv_hi = MAP gdscCnv_t -> module.getHiValue();
 gdscCnv_low = MAP gdscCnv_t -> module.getLowValue();
 
-STORE gdscCnv_hi 'file:///module3_5.csv';
-STORE gdscCnv_low 'file:///module3_6.csv';
+STORE gdscCnv_hi 'file:///ml4omics/module3/module3_5.csv';
+STORE gdscCnv_low 'file:///ml4omics/module3/module3_6.csv';
 
