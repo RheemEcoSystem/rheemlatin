@@ -81,6 +81,7 @@
         <module>latin-optimizer</module>
         <module>latin-executor</module>
         <module>latin-ML4Omics</module>
+        <module>rheem-operator</module>
     </modules>
 
     <dependencies>

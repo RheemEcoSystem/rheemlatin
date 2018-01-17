@@ -60,10 +60,6 @@ public class Module1 {
         };
     }
 
-    public static FunctionDescriptor.SerializablePredicate<RecordBag> filterTopK() {
-        return new LimitFilter(1000);
-    }
-
     public static FunctionDescriptor.SerializableFunction<RecordBag, Iterable<RecordBag>> flatMap() {
         String[] keys = new String[]{"gene_name"};
         return (recordBag) -> {

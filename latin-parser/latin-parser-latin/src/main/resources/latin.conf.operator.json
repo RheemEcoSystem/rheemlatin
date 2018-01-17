@@ -71,6 +71,10 @@
       "name": "UNION",
       "nfunction": "2",
       "type": "BinaryToUnary"
+    },{
+      "name": "LIMIT",
+      "nfunction": "2",
+      "type": "UnaryToUnary"
     }
   ],
   "wrapper_mapping" : [

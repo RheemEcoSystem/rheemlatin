@@ -7,7 +7,11 @@ public enum ParameterType {
     FUNCTION("function", org.qcri.rheem.core.function.FunctionDescriptor.SerializableFunction.class),
     CLASS("class", Class.class),
     STRING("string", String.class),
-    STRING_ARRAY("string[]",String[].class);
+    STRING_ARRAY("string[]",String[].class),
+    LONG("long", long.class),
+    INT("int", int.class),
+    DOUBLE("double", double.class),
+    BOOLEAN("boolean", boolean.class);
 
     private String text;
     private Class type;

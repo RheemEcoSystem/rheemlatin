@@ -103,6 +103,13 @@
       "parameters": [
         "class"
       ]
+    },{
+      "name_latin": "LIMIT",
+      "name_rheem": "LimitOperator",
+      "parameters": [
+        "long",
+        "class"
+      ]
     }
   ]
 }

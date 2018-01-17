@@ -39,12 +39,10 @@ public class Module2 {
 
     public static FunctionBroadcast<RecordBag, RecordBag, String> getGeneName() {
         String key = "cell_line_name";
-        return new MapLikeFilterBroadcast(key, (String)null, false);
+        /*SE TIENE QUE REHCER*/
+        //return new MapLikeFilterBroadcast(key, (String)null, false);
+        return null;
     }
 
-    public static FunctionDescriptor.SerializablePredicate<RecordBag> removeNull() {
-        return (recordBag) -> {
-            return recordBag != null;
-        };
-    }
+
 }
