@@ -58,7 +58,10 @@ public class TranslatorRheemReflexion {
 
             rheem_operator = (Operator) reflex.getConstructor().newInstance(params_real);
             rheem_operator.setName(operator.getAlias());
-        } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
+        } catch ( IllegalAccessException |
+                  InstantiationException |
+                  InvocationTargetException |
+                  IllegalArgumentException e) {
             throw new TranslatorRheemException(e);
         }
 

@@ -13,6 +13,7 @@ import org.qcri.rheem.latin.udf.broadcast.UDFunctionBroadcast;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.function.Function;
 
 public class TranslatorRheemManyOperator extends TranslatorRheemOperator {
 
@@ -72,6 +73,12 @@ public class TranslatorRheemManyOperator extends TranslatorRheemOperator {
                     obj[i] = (FunctionDescriptor.SerializablePredicate) a -> (Boolean) expr.evaluate(a);
                     expre_index++;
                 }
+            }
+            if(params[i] == ParameterType.LONG){
+                Expression expr = BuilderExpression.builderExpression(this.inputs.getExpression(expre_index));
+                Function<Object, Double> fun =(Function<Object, Double>) a -> (double) expr.evaluate(a);
+                obj[i] = fun.apply(null).longValue();
+                expre_index++;
             }
             if(params[i] == ParameterType.CLASS){
                 if(class_index < this.inputs.getSize()) {

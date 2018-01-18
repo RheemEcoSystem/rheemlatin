@@ -1051,7 +1051,7 @@ public class ConvertListener implements LatinParserListener
 
     private String getString(String text){
         text = text.substring(1, text.length() - 1);
-        if(text.compareToIgnoreCase("\\\\t")== 0){
+        if(text.compareToIgnoreCase("\\t")== 0){
             return "\t";
         }
         return text;

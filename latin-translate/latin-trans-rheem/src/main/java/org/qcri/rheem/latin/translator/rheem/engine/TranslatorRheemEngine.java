@@ -12,7 +12,7 @@ public class TranslatorRheemEngine extends LatinEngine{
 
     public TranslatorRheemEngine(String name) {
         super(name);
-        this.context = new TranslatorRheemContext(URI.create("file:///Users/bertty/Qatar/rheem-latin/latin-translate/latin-trans-rheem/src/main/resources/latin.conf.mapping.json"));
+        this.context = new TranslatorRheemContext(URI.create("file:///Users/bertty/rheem-latin/latin-translate/latin-trans-rheem/src/main/resources/latin.conf.mapping.json"));
     }
 
     @Override

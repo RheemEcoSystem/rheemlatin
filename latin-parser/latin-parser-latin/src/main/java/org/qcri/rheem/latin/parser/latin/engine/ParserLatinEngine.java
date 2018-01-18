@@ -21,7 +21,7 @@ public class ParserLatinEngine extends LatinEngine {
     public ParserLatinEngine(String name) {
         super(name);
         //TODO change the path
-        this.context = new ParserLatinContext(URI.create("file:///Users/bertty/Qatar/rheem-latin/latin-parser/latin-parser-latin/src/main/resources/latin.conf.operator.json"));
+        this.context = new ParserLatinContext(URI.create("file:///Users/bertty/rheem-latin/latin-parser/latin-parser-latin/src/main/resources/latin.conf.operator.json"));
     }
 
     @Override

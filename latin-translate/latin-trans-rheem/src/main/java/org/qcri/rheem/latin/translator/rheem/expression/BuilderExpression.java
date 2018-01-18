@@ -23,6 +23,14 @@ public class BuilderExpression implements Types {
     private static int generateList(LatinExpression expr, List<Element> list_nodes){
 
         if( isLeaf(expr) || ! expr.hasChildren()){
+            if(list_nodes.size() == 0){
+                Element element = new Element(expr.countChildren());
+                element.setValueEle(
+                        (Double) ((ConstantExpression)expr).getValue()
+                );
+                element.setTypeEle(Types.VALUE);
+                list_nodes.add(element);
+            }
             return -1;
         }
         Element element = new Element(expr.countChildren());
@@ -70,6 +78,7 @@ public class BuilderExpression implements Types {
                 element.setPositon(position[index]);
             }else{
                 if( sub_expr instanceof ConstantExpression ){
+                    System.out.println("here");
                     ConstantExpression _sub_expr = (ConstantExpression) sub_expr;
                     if(_sub_expr.get_class().equals(Double.class) ){
                         element.setValue(
