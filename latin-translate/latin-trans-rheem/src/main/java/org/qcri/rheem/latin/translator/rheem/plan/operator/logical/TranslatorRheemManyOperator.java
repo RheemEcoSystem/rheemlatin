@@ -1,6 +1,7 @@
 package org.qcri.rheem.latin.translator.rheem.plan.operator.logical;
 
 import org.qcri.rheem.core.function.FunctionDescriptor;
+import org.qcri.rheem.latin.core.exception.LatinException;
 import org.qcri.rheem.latin.core.plan.LatinElement;
 import org.qcri.rheem.latin.core.plan.expression.RealFunctionExpression;
 import org.qcri.rheem.latin.translator.rheem.exception.TranslatorRheemException;

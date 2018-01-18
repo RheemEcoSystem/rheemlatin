@@ -34,7 +34,8 @@ public class Mappings {
                     new RepeatMapping(),
                     new SampleMapping(),
                     new ZipWithIdMapping(),
-                    new LimitMapping()
+                    new LimitMapping(),
+                    new SkipMapping()
             });
     public static Collection<Mapping> GRAPH_MAPPINGS = Arrays.asList(new Mapping[]{new PageRankMapping()});
 

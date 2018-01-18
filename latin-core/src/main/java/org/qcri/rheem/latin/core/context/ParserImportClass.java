@@ -118,7 +118,6 @@ public class ParserImportClass extends ClassLoader{
 
     public Object getLambda(String class_name, String method_name, Object[] parameters){
         Method method = getMethod(class_name, method_name);
-        System.out.println("method "+method+" "+parameters);
 
         try {
             if(parameters == null){

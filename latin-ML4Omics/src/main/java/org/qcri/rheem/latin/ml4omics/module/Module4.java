@@ -28,10 +28,12 @@ public class Module4 {
         return new MapBroadcast("gene_name", "ic_50_uM", names);
     }
 
-    public static FunctionDescriptor.SerializableFunction<RecordBag, String> getIdSample(){
+    public static FunctionDescriptor.SerializableFunction<RecordBag, RecordBag> getIdSample(){
         final String column = "id_sample";
+        final HeaderBag header = new HeaderBag("id");
+        header.setKeys("id");
         return recordBag -> {
-            return recordBag.getValue(column);
+            return new RecordBag(header, new Record(recordBag.getValue(column)));
         };
     }
 }

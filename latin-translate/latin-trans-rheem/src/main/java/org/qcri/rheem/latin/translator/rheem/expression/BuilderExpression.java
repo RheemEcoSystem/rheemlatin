@@ -78,7 +78,6 @@ public class BuilderExpression implements Types {
                 element.setPositon(position[index]);
             }else{
                 if( sub_expr instanceof ConstantExpression ){
-                    System.out.println("here");
                     ConstantExpression _sub_expr = (ConstantExpression) sub_expr;
                     if(_sub_expr.get_class().equals(Double.class) ){
                         element.setValue(

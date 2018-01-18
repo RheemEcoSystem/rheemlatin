@@ -110,6 +110,13 @@
         "long",
         "class"
       ]
+    },{
+      "name_latin": "SKIP",
+      "name_rheem": "SkipOperator",
+      "parameters": [
+        "long",
+        "class"
+      ]
     }
   ]
 }

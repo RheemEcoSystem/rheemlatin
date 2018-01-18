@@ -40,8 +40,7 @@ public class Module2 {
     public static FunctionBroadcast<RecordBag, RecordBag, String> getGeneName() {
         String key = "cell_line_name";
         /*SE TIENE QUE REHCER*/
-        //return new MapLikeFilterBroadcast(key, (String)null, false);
-        return null;
+        return new MapLikeFilterBroadcast(key, (String)null, false);
     }
 
 

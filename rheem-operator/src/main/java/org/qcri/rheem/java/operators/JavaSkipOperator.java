@@ -1,6 +1,6 @@
 package org.qcri.rheem.java.operators;
 
-import org.qcri.rheem.basic.operators.LimitOperator;
+import org.qcri.rheem.basic.operators.SkipOperator;
 import org.qcri.rheem.core.optimizer.OptimizationContext;
 import org.qcri.rheem.core.plan.rheemplan.ExecutionOperator;
 import org.qcri.rheem.core.platform.ChannelDescriptor;
@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Java implementation of the {@link LimitOperator}.
+ * Java implementation of the {@link SkipOperator}.
  */
-public class JavaLimitOperator<Type>
-        extends LimitOperator<Type>
+public class JavaSkipOperator<Type>
+        extends SkipOperator<Type>
         implements JavaExecutionOperator {
 
 
@@ -32,8 +32,8 @@ public class JavaLimitOperator<Type>
      *
      * @param type type of the dataset elements
      */
-    public JavaLimitOperator(long limit, DataSetType<Type> type) {
-        super(limit, type);
+    public JavaSkipOperator(long skip, DataSetType<Type> type) {
+        super(skip, type);
     }
 
     /**
@@ -41,7 +41,7 @@ public class JavaLimitOperator<Type>
      *
      * @param that that should be copied
      */
-    public JavaLimitOperator(LimitOperator<Type> that) {
+    public JavaSkipOperator(SkipOperator<Type> that) {
         super(that);
     }
 
@@ -62,19 +62,19 @@ public class JavaLimitOperator<Type>
         } else {
             stream = input.provideStream();
         }
-        ((StreamChannel.Instance) outputs[0]).accept(stream.limit(this.limit));
+        ((StreamChannel.Instance) outputs[0]).accept(stream.skip(this.getSkip()));
 
         return ExecutionOperator.modelEagerExecution(inputs, outputs, operatorContext);
     }
 
     @Override
     public String getLoadProfileEstimatorConfigurationKey() {
-        return "rheem.java.limit.load";
+        return "rheem.java.skip.load";
     }
 
     @Override
     protected ExecutionOperator createCopy() {
-        return new JavaLimitOperator<>(this);
+        return new JavaSkipOperator<>(this);
     }
 
     @Override

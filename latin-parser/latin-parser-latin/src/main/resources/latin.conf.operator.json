@@ -75,6 +75,10 @@
       "name": "LIMIT",
       "nfunction": "2",
       "type": "UnaryToUnary"
+    },{
+      "name": "SKIP",
+      "nfunction": "2",
+      "type": "UnaryToUnary"
     }
   ],
   "wrapper_mapping" : [

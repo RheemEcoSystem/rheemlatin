@@ -1,13 +1,16 @@
 IMPORT 'file:///ml4omics/udf/Module3.class' AS module;
+IMPORT 'file:///ml4omics/udf/MapLikeFilterBroadcast.class' AS mapFilter;
 
 gene_list = LOAD 'file:///ml4omics/module1/output1_1.csv';
 
-gdscCnv = LOAD 'file:///ml4omics/module3/Gene_level_CN.csv';
+gdscCnv = LOAD 'file:///ml4omics/module3/Gene_level_CN.csv'
+                AS('gene_name','chr','start','stop')
+                DELIMITER '\"[^"]*"|[^,]*';
 
 
 gdscCnv_gene_w_null = MAP  gdscCnv -> module.getGeneName() WITH BROADCAST gene_list;
 
-gdscCnv_gene = FILTER gdscCnv_gene_w_null -> module.removeNull;
+gdscCnv_gene = FILTER gdscCnv_gene_w_null -> module.removeNull();
 
 gdscCnv_map = MAP gdscCnv_gene -> module.firstMap();
 

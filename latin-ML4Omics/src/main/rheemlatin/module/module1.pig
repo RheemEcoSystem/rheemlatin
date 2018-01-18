@@ -70,7 +70,7 @@ top_k = LIMIT frecuency_sort, 1000;
 
 gene_list = MAP top_k -> module.getGene_name();
 
-STORE gene_list 'file:///ml4omics/module1/output1_1.csv';
+STORE gene_list 'file:///ml4omics/module1/module1_1.csv';
 
 /** DCAST START */
 gdsc_glioma_short = FLATMAP top_k -> module.flatMap();
@@ -85,5 +85,5 @@ gdsc_glioma_short_dcast = MAP gdsc_glioma_short_grp -> module.dcast() WITH BROAD
 
 gdsc_glioma_short_dcast_ord = SORT gdsc_glioma_short_dcast;
 
-STORE gdsc_glioma_short_dcast_ord 'file:///ml4omics/module1/output1_2.csv';
+STORE gdsc_glioma_short_dcast_ord 'file:///ml4omics/module1/module1_2.csv';
 

@@ -47,7 +47,8 @@ public class HeaderBag {
                 return i;
             }
         }
-        return -1;
+        //TODO: validar si es correcto o deberia ser -1
+        return 0;
     }
 
     public String[] getKeys(){

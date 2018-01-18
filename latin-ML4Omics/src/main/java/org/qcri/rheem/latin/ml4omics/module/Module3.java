@@ -50,7 +50,11 @@ public class Module3 {
 
             for(i = middle; i < stop; ++i) {
                 Object[][] expansion = new Object[2][3];
-                String[] split = recordBag.getPosition(i).split(",");
+                String celd = recordBag.getPosition(i);
+                if(celd.contains("\"")){
+                    celd = celd.replace("\"", "");
+                }
+                String[] split = celd.split(",");
 
                 for(int j = 0; j <= 1; ++j) {
                     try {
