@@ -75,9 +75,11 @@ STORE gene_list 'file:///ml4omics/module1/module1_1.csv';
 /** DCAST START */
 gdsc_glioma_short = FLATMAP top_k -> module.flatMap();
 
-gdsc_glioma_short_grp = GROUP_BY gdsc_glioma_short -> module.getKeyGlioma();
+gdsc_glioma_short_sort = SORT gdsc_glioma_short;
 
-gdsc_glioma_short_uni = DISTINCT gdsc_glioma_short;
+gdsc_glioma_short_grp = GROUP_BY gdsc_glioma_short_sort -> module.getKeyGlioma();
+
+gdsc_glioma_short_uni = DISTINCT gdsc_glioma_short_sort;
 
 gdsc_glioma_short_dcast = MAP gdsc_glioma_short_grp -> module.dcast() WITH BROADCAST gdsc_glioma_short_uni;
 

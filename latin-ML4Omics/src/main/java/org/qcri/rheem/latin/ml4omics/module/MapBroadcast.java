@@ -5,6 +5,7 @@ import org.qcri.rheem.latin.core.plan.structure.bag.HeaderBag;
 import org.qcri.rheem.latin.core.plan.structure.bag.RecordBag;
 import org.qcri.rheem.latin.udf.broadcast.FunctionBroadcast;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -65,7 +66,7 @@ public class MapBroadcast implements FunctionBroadcast<Iterable<RecordBag>, Reco
         if (this.headerBag == null) {
             this.headerBag = new HeaderBag(titles);
             this.headerBag.setKeys(new String[]{"sample_name"});
-            System.out.println(this.headerBag);
+            this.headerBag.setPrintable(true);
         }
 
         return new RecordBag(this.headerBag, new Record(obj));
